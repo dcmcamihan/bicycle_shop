@@ -24,7 +24,9 @@ const getEmployeeById = async (req, res) => {
 
 const createEmployee = async (req, res) => {
     try {
-        const employeeId = await employeeModel.createEmployee(req.body);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const employeeData = { ...req.body, password: hashedPassword };
+        const employeeId = await employeeModel.createEmployee(employeeData);
         res.status(201).json({ employee_id: employeeId });
     } catch (error) {
         res.status(500).json({ error: error.message });
