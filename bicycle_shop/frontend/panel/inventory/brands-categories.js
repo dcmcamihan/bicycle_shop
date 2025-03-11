@@ -1,6 +1,6 @@
 // Define an initialization function for the brands and categories page
 function initBrandsCategories() {
-  // --- Tab Switching ---
+  // --- Tab Switching (existing code) ---
   const tabButtons = document.querySelectorAll(".tab-button");
   const tabContents = document.querySelectorAll(".tab-content");
 
@@ -14,7 +14,83 @@ function initBrandsCategories() {
     });
   });
 
-  // --- Modal Handling for Brands & Categories ---
+  // --- NEW: API Data Loading Functions ---
+  // Add these functions to load brands and categories from your API endpoints
+
+  function loadBrands() {
+    fetch('http://127.0.0.1:3000/api/brands')
+      .then(response => response.json())
+      .then(brands => {
+        const brandList = document.querySelector(".brand-list");
+        // Clear any static data (remove example brand cards)
+        brandList.innerHTML = "";
+        brands.forEach(brand => {
+          const brandCard = document.createElement("div");
+          brandCard.classList.add("brand-card");
+          brandCard.innerHTML = `
+            <div class="brand-avatar">
+              <div class="default-avatar">${brand.brand_name.substring(0, 2).toUpperCase()}</div>
+            </div>
+            <h3>${brand.brand_name}</h3>
+            <p>Origin: ${brand.origin}</p>
+            <div class="card-actions">
+              <i class="fa-solid fa-pen-to-square edit-brand"></i>
+              <i class="fa-solid fa-trash delete-brand"></i>
+            </div>
+          `;
+          // Attach event listener for editing this brand
+          brandCard.querySelector(".edit-brand").addEventListener("click", () => {
+            openModal("brand", brandCard);
+          });
+          // Attach event listener for deleting this brand
+          brandCard.querySelector(".delete-brand").addEventListener("click", () => {
+            if (confirm("Are you sure you want to delete this brand?")) {
+              // Optionally, perform an API call to delete on the backend here
+              brandCard.remove();
+            }
+          });
+          brandList.appendChild(brandCard);
+        });
+      })
+      .catch(error => console.error("Error loading brands:", error));
+  }
+
+  function loadCategories() {
+    fetch('http://127.0.0.1:3000/api/categories')
+      .then(response => response.json())
+      .then(categories => {
+        const tableBody = document.querySelector(".categories-table tbody");
+        // Clear any static data (remove example category rows)
+        tableBody.innerHTML = "";
+        categories.forEach(category => {
+          const tr = document.createElement("tr");
+          tr.setAttribute("data-cat-code", category.category_code);
+          tr.innerHTML = `
+            <td>${category.category_code}</td>
+            <td>${category.category_name}</td>
+            <td>
+              <i class="fa-solid fa-pen-to-square edit-category"></i>
+              <i class="fa-solid fa-trash delete-category"></i>
+            </td>
+          `;
+          // Attach event listener for editing this category
+          tr.querySelector(".edit-category").addEventListener("click", () => {
+            openModal("category", tr);
+          });
+          // Attach event listener for deleting this category
+          tr.querySelector(".delete-category").addEventListener("click", () => {
+            if (confirm("Are you sure you want to delete this category?")) {
+              // Optionally, perform an API call to delete on the backend here
+              tr.remove();
+            }
+          });
+          tableBody.appendChild(tr);
+        });
+      })
+      .catch(error => console.error("Error loading categories:", error));
+  }
+
+  // --- Modal Handling for Brands & Categories (existing code) ---
   const bcModal = document.getElementById("bcModal");
   const closeModal = document.querySelector(".close-modal");
   const addBrandBtn = document.getElementById("addBrandBtn");
@@ -79,7 +155,7 @@ function initBrandsCategories() {
     });
   }
 
-  // Handle form submission for both brands and categories
+  // Handle form submission for both brands and categories (existing code)
   bcForm.addEventListener("submit", (e) => {
     e.preventDefault();
     if (!currentEditing) return;
@@ -117,6 +193,7 @@ function initBrandsCategories() {
         // Attach event listener for delete on the new card
         brandCard.querySelector(".delete-brand").addEventListener("click", () => {
           if (confirm("Are you sure you want to delete this brand?")) {
+            // Optionally, add API delete call here
             brandCard.remove();
           }
         });
@@ -150,6 +227,7 @@ function initBrandsCategories() {
         // Attach event listener for delete on the new row
         newRow.querySelector(".delete-category").addEventListener("click", () => {
           if (confirm("Are you sure you want to delete this category?")) {
+            // Optionally, add API delete call here
             newRow.remove();
           }
         });
@@ -159,7 +237,8 @@ function initBrandsCategories() {
     bcForm.reset();
   });
 
-  // Attach event listeners for existing edit and delete buttons
+  // --- Attach event listeners for existing static data ---
+  // (These may no longer be needed if you remove the static examples from your HTML.)
   const existingEditBrands = document.querySelectorAll(".edit-brand");
   existingEditBrands.forEach(icon => {
     icon.addEventListener("click", () => {
@@ -195,6 +274,11 @@ function initBrandsCategories() {
       }
     });
   });
+
+  // --- NEW: Call the API Loading Functions ---
+  // Add these calls at the end of the initBrandsCategories function so the data is loaded on page load.
+  loadBrands();
+  loadCategories();
 }
 
 // Expose the initialization function so it can be called externally
