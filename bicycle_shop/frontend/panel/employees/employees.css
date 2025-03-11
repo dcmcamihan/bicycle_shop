@@ -75,11 +75,27 @@
   background-color: #2cae74;
 }
 .emp-status.on-leave {
-  background-color: #f1c40f; /* yellowish */
+  background-color: #f1c40f; 
 }
 .emp-status.terminated {
   background-color: #c0392b;
 }
+.emp-status.probationary {
+  background-color: #e67e22; 
+}
+.emp-status.part-time {
+  background-color: #9b59b6; 
+}
+.emp-status.full-time {
+  background-color: #2980b9; 
+}
+.emp-status.resigned {
+  background-color: #7f8c8d; 
+}
+.emp-status.retired {
+  background-color: #95a5a6; 
+}
+
 
 /* Edit icon */
 .view-icon {
