@@ -9,6 +9,11 @@ function initEmployees() {
   let employeeData = []; // Stores employees fetched from API
   let statusMap = {}; // Maps status codes to descriptions
 
+  // Pagination variables
+  let currentPage = 1;
+  const rowsPerPage = 10;
+  let allEmployeeRows = [];
+
   // Fetch all statuses from the API and store in statusMap
   function loadStatuses() {
     return fetch("http://127.0.0.1:3000/api/statuses")
@@ -61,7 +66,7 @@ function initEmployees() {
   function renderTable() {
     const tbody = document.querySelector(".employees-table tbody");
     tbody.innerHTML = "";
-    employeeData.forEach(employee => {
+    allEmployeeRows = employeeData.map(employee => {
       // Determine status class based on status text (case-insensitive)
       let statusClass = "";
       switch (employee.status.toLowerCase()) {
@@ -106,9 +111,42 @@ function initEmployees() {
       tr.querySelector(".edit-icon").addEventListener("click", () => {
         openEditModal(tr);
       });
-      tbody.appendChild(tr);
+      return tr;
     });
+    renderPage();
   }
+
+  function renderPage() {
+    const tbody = document.querySelector(".employees-table tbody");
+    tbody.innerHTML = ""; // Clear existing rows
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const rowsToShow = allEmployeeRows.slice(start, end);
+
+    rowsToShow.forEach(row => {
+      tbody.appendChild(row);
+    });
+
+    // Update pagination controls
+    document.getElementById('pageNumber').textContent = currentPage;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = end >= allEmployeeRows.length;
+  }
+
+  document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderPage();
+    }
+  });
+
+  document.getElementById('nextPage').addEventListener('click', () => {
+    if (currentPage * rowsPerPage < allEmployeeRows.length) {
+      currentPage++;
+      renderPage();
+    }
+  });
 
   // Open edit modal and populate fields with employee row data
   function openEditModal(employeeRow) {
