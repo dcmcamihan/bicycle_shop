@@ -100,10 +100,10 @@ function initEmployees() {
         <td>${employee.gender}</td>
         <td><span class="emp-status ${statusClass}">${employee.status}</span></td>
         <td>${employee.primaryContact}</td>
-        <td><i class="fa-solid fa-eye view-icon"></i></td>
+        <td><i class="fa-solid fa-pen-to-square edit-icon"></i></td>
       `;
       // Attach event listener to open edit modal when view icon is clicked
-      tr.querySelector(".view-icon").addEventListener("click", () => {
+      tr.querySelector(".edit-icon").addEventListener("click", () => {
         openEditModal(tr);
       });
       tbody.appendChild(tr);
