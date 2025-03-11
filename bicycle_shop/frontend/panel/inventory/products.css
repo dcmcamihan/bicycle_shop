@@ -1,0 +1,540 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #1a1a1a;
+  font-family: "Oswald", sans-serif;
+  color: #fff;
+}
+
+/* Main two-column layout */
+.product-page-container {
+  display: grid;
+  grid-template-columns: 350px 1fr; /* 350px for form, rest for table */
+  gap: 20px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Products Table */
+.products-container h1 {
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  color: #ab0d07;
+  text-align: center;
+}
+
+.collapsible-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.collapsible-table thead {
+  background-color: #333;
+}
+
+.collapsible-table th,
+.collapsible-table td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.collapsible-table th {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.parent-row:hover {
+  background-color: #3a3a3a;
+}
+
+.toggle-cell {
+  width: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.toggle-btn {
+  transition: transform 0.3s ease;
+  font-size: 1rem;
+  cursor: pointer; 
+}
+
+.edit-product {
+  cursor: pointer; 
+}
+
+.child-row {
+  display: none;
+  background-color: #1f1f1f;
+}
+
+.child-content {
+  padding: 20px;
+  background-color: #1f1f1f;
+  border-top: 1px solid #444;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.history-table th,
+.history-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #555;
+  font-size: 0.9rem;
+}
+
+.history-table thead {
+  background-color: #333;
+}
+
+.history-table tr:nth-child(even) {
+  background-color: #2a2a2a;
+}
+
+/* Product Image */
+.product-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+#editProductImagePreview {
+  width: 100px; 
+  height: 100px;
+  object-fit: cover; 
+  border-radius: 50%; 
+  display: block; 
+  margin: 0 auto; 
+}
+
+/* Styles for the add modal image preview */
+#addProductImagePreview {
+  width: 100px; 
+  height: 100px; 
+  object-fit: cover; 
+  border-radius: 50%; 
+  border: 2px solid #ab0d07; 
+  display: block; 
+  margin: 0 auto; 
+}
+
+/* Styles for the delete icon */
+.delete-product {
+  cursor: pointer;
+  margin-left: 10px; 
+  color: #ff4d4d; 
+  transition: color 0.3s ease; 
+}
+
+.delete-product:hover {
+  color: #cc0000; 
+}
+
+/* Status badges */
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.in-stock {
+  background-color: #2cae74;
+}
+
+.out-stock {
+  background-color: #c0392b;
+}
+
+.toggle-btn.rotated {
+  transform: rotate(90deg);
+}
+
+/* ==================== EDIT PRODUCT MODAL STYLES ==================== */
+.modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #2a2a2a;
+  margin: 60px auto;
+  padding: 20px;
+  width: 600px;
+  max-width: 90%;
+  border-radius: 8px;
+  position: relative;
+  color: #fff;
+}
+
+.close-modal-edit, .close-modal-add {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 1.5rem; 
+  color: #fff;
+  background-color: #ab0d07; 
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease; 
+}
+
+.close-modal-edit:hover, .close-modal-add:hover {
+  background-color: #900c06; 
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+/* Tab Buttons in the modal */
+.edit-product-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.edit-tab-button {
+  background-color: #333;
+  color: #ccc;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.edit-tab-button.active {
+  background-color: #ab0d07;
+  color: #fff;
+}
+
+.edit-tab-button:hover {
+  background-color: #444;
+}
+
+/* Tab Contents */
+.edit-tab-content {
+  display: none;
+}
+
+.edit-tab-content.active {
+  display: block;
+}
+
+.edit-tab-content .form-group {
+  margin-bottom: 15px;
+}
+
+.edit-tab-content .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.edit-tab-content .form-group input[type="text"],
+.edit-tab-content .form-group input[type="number"],
+.edit-tab-content .form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Save Button in modal */
+#saveEditProductBtn {
+  background-color: #ab0d07;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Oswald", sans-serif;
+  font-size: 1rem;
+  transition: background 0.3s;
+  width: 100%;
+  margin-top: 20px;
+}
+#saveEditProductBtn:hover {
+  background-color: #900c06;
+}
+
+/* LIGHT MODE OVERRIDES */
+body.light-mode {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+body.light-mode .history-table tr:nth-child(even) {
+  background-color: #f7f7f7 !important;
+}
+
+body.light-mode .add-product-side {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+body.light-mode .add-product-form input[type="text"],
+body.light-mode .add-product-form input[type="number"] {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+body.light-mode .collapsible-table {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .collapsible-table thead {
+  background-color: #f7f7f7;
+}
+
+body.light-mode .collapsible-table th,
+body.light-mode .collapsible-table td {
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+body.light-mode .parent-row:hover {
+  background-color: #f0f0f0;
+}
+
+body.light-mode .child-row {
+  background-color: #fafafa;
+}
+
+body.light-mode .child-content {
+  background-color: #fafafa;
+  border-top: 1px solid #eee;
+}
+
+body.light-mode .history-table thead {
+  background-color: #f7f7f7;
+}
+
+body.light-mode .history-table th,
+body.light-mode .history-table td {
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+
+body.light-mode .in-stock {
+  background-color: #2cae74;
+}
+
+body.light-mode .out-stock {
+  background-color: #c0392b;
+}
+
+/* Modal in light mode */
+body.light-mode .modal-content {
+  background-color: #fff;
+  color: #333;
+}
+body.light-mode .close-modal {
+  color: #333;
+}
+body.light-mode .edit-tab-button {
+  background-color: #f0f0f0;
+  color: #555;
+}
+body.light-mode .edit-tab-button.active {
+  background-color: #ab0d07;
+  color: #fff;
+}
+body.light-mode .edit-tab-content .form-group input,
+body.light-mode .edit-tab-content .form-group select {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #ccc;
+}
+body.light-mode #saveEditProductBtn {
+  background-color: #ab0d07;
+  color: #fff;
+}
+body.light-mode #saveEditProductBtn:hover {
+  background-color: #900c06;
+}
+
+/* Add Product Button Container */
+.add-product-btn-container {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.btn-add-product {
+  background-color: #ab0d07;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-family: "Oswald", sans-serif;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-left: auto;
+}
+
+.btn-add-product:hover {
+  background-color: #900c06;
+}
+
+.btn-add-product {
+  background-color: #ab0d07;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-family: "Oswald", sans-serif;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-add-product:hover {
+  background-color: #900c06;
+}
+
+/* Pagination Controls */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;   /* moves the pagination down */
+  margin-right: 50px; /* moves it a little to the left relative to its container */
+}
+
+.pagination button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #555;
+}
+
+.pagination button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #939294;
+}
+
+/* LIGHT MODE OVERRIDES for Controls */
+body.light-mode .pagination button {
+  background-color: #ddd;
+  color: #333;
+}
+
+body.light-mode .pagination button:hover {
+  background-color: #ccc;
+}
+
+body.light-mode .btn-add-product {
+  background-color: #ab0d07;
+  color: #fff;
+}
+
+/* Search, Filter, and Add Product Container */
+.search-filter-add-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+/* Search Bar with Icon inside */
+.search-bar {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+.search-bar i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ab0d07;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+.search-bar input {
+  width: 100%;
+  padding: 10px 12px 10px 36px; /* extra left padding for icon */
+  border: 1px solid #444;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.filter-dropdown {
+  flex: 0 0 200px;
+}
+
+.filter-dropdown select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* LIGHT MODE OVERRIDES for Search & Filter */
+body.light-mode .search-bar input,
+body.light-mode .filter-dropdown select {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #ccc;
+}

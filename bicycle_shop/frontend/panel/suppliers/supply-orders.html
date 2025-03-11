@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supply Orders | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+  <div class="supply-orders-container">
+    <h1>Supply Orders</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search supply orders..." />
+      </div>
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="supplier">Supplier</option>
+          <option value="date">Date</option>
+          <option value="payment">Payment Method</option>
+        </select>
+      </div>
+      <!-- Top Add Supply Order Button (optional, you can remove if you want the button only at the bottom) -->
+      <button class="btn-add-supply" id="btnAddSupply">
+        <i class="fa-solid fa-plus"></i> Add Supply Order
+      </button>
+    </div>
+    
+    <!-- Collapsible Supply Orders Table -->
+    <table class="collapsible-table">
+      <thead>
+        <tr>
+          <th></th> <!-- Arrow column -->
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Supplier</th>
+          <th>Sale Attendant</th>
+          <th>Manager</th>
+          <th>Payment Method</th>
+          <th>Total Cost</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Supply Order 1 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO001</td>
+          <td>2025-03-20</td>
+          <td>Acme Supplies</td>
+          <td>John Doe</td>
+          <td>Jane Smith</td>
+          <td>Card</td>
+          <td>$1500</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-supply"></i>
+            <i class="fa-solid fa-trash delete-supply"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="9">
+            <div class="child-content">
+              <h3>Order Details</h3>
+              <table class="detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Supplied</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bicycle Frame</td>
+                    <td>10</td>
+                  </tr>
+                  <tr>
+                    <td>Handlebars</td>
+                    <td>10</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <!-- Supply Order 2 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO002</td>
+          <td>2025-03-21</td>
+          <td>Global Parts</td>
+          <td>Mark Taylor</td>
+          <td>Lisa Ray</td>
+          <td>Cash</td>
+          <td>$800</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-supply"></i>
+            <i class="fa-solid fa-trash delete-supply"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="9">
+            <div class="child-content">
+              <h3>Order Details</h3>
+              <table class="detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Supplied</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Brake Pads</td>
+                    <td>50</td>
+                  </tr>
+                  <tr>
+                    <td>Cables</td>
+                    <td>100</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <!-- Supply Order 3 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO003</td>
+          <td>2025-03-22</td>
+          <td>Parts Direct</td>
+          <td>Emily Clark</td>
+          <td>Robert King</td>
+          <td>Card</td>
+          <td>$1200</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-supply"></i>
+            <i class="fa-solid fa-trash delete-supply"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="9">
+            <div class="child-content">
+              <h3>Order Details</h3>
+              <table class="detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Supplied</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Chain</td>
+                    <td>20</td>
+                  </tr>
+                  <tr>
+                    <td>Pedals</td>
+                    <td>20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Controls Container: Pagination on left, Add Supply Order Button on right -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+  </div>
+  
+  <!-- Add Supply Order Modal -->
+  <div class="modal" id="addSupplyModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeAddSupplyModal">&times;</span>
+      <h2>Add Supply Order</h2>
+      <form id="addSupplyForm">
+        <div class="form-group">
+          <label for="supplySupplier">Supplier</label>
+          <input type="text" id="supplySupplier" placeholder="Supplier Name" required />
+        </div>
+        <div class="form-group">
+          <label for="supplyDate">Date</label>
+          <input type="date" id="supplyDate" required />
+        </div>
+        <div class="form-group">
+          <label for="supplySaleAttendant">Sale Attendant</label>
+          <input type="text" id="supplySaleAttendant" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+          <label for="supplyManager">Manager</label>
+          <input type="text" id="supplyManager" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+          <label for="supplyPayment">Payment Method</label>
+          <input type="text" id="supplyPayment" placeholder="e.g. Cash, Card" required />
+        </div>
+        <div class="form-group">
+          <label for="supplyTotalCost">Total Cost</label>
+          <input type="number" id="supplyTotalCost" placeholder="Total Cost" required />
+        </div>
+        <button type="submit" class="btn-submit">Add Supply Order</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Edit Supply Order Modal -->
+  <div class="modal" id="editSupplyModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditSupplyModal">&times;</span>
+      <h2>Edit Supply Order</h2>
+      <form id="editSupplyForm">
+        <input type="hidden" id="editSupplyIndex" />
+        <div class="form-group">
+          <label for="editSupplyID">Order ID</label>
+          <input type="text" id="editSupplyID" disabled />
+        </div>
+        <div class="form-group">
+          <label for="editSupplySupplier">Supplier</label>
+          <input type="text" id="editSupplySupplier" required />
+        </div>
+        <div class="form-group">
+          <label for="editSupplyDate">Date</label>
+          <input type="date" id="editSupplyDate" required />
+        </div>
+        <div class="form-group">
+          <label for="editSupplySaleAttendant">Sale Attendant</label>
+          <input type="text" id="editSupplySaleAttendant" required />
+        </div>
+        <div class="form-group">
+          <label for="editSupplyManager">Manager</label>
+          <input type="text" id="editSupplyManager" required />
+        </div>
+        <div class="form-group">
+          <label for="editSupplyPayment">Payment Method</label>
+          <input type="text" id="editSupplyPayment" required />
+        </div>
+        <div class="form-group">
+          <label for="editSupplyTotalCost">Total Cost</label>
+          <input type="number" id="editSupplyTotalCost" required />
+        </div>
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

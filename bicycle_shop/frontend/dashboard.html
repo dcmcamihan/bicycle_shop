@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | Jolens Bicycle Supply</title>
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
+
+  <!-- Dashboard CSS -->
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="panel/inventory/products.css" />
+  <link rel="stylesheet" href="panel/employees/employees.css" />
+  <link rel="stylesheet" href="panel/employees/attendance.css" />
+  <link rel="stylesheet" href="panel/employees/role-history.css" />
+  <link rel="stylesheet" href="panel/inventory/brands-categories.css" />
+  <link rel="stylesheet" href="panel/inventory/stockout.css" />
+  <link rel="stylesheet" href="panel/sales/sale-details.css" />
+  <link rel="stylesheet" href="panel/sales/payment-types.css" />
+  <link rel="stylesheet" href="panel/sales/sales-overview.css" />
+  <link rel="stylesheet" href="panel/customers/customer-list.css" />
+  <link rel="stylesheet" href="panel/customers/customer-contact.css" />
+  <link rel="stylesheet" href="panel/suppliers/supplier-list.css" />
+  <link rel="stylesheet" href="panel/suppliers/supplier-contact.css" />
+  <link rel="stylesheet" href="panel/suppliers/supply-orders.css" />
+
+
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Logo / Header -->
+    <div class="sidebar-header">
+      <div class="logo">
+        <img src="img/logo.png" alt="Jolens Logo" id="jolensLogo" />
+        <h2>Jolens</h2>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="#" class="nav-link active">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="link-text">Dashboard</span>
+          </a>
+        </li>
+
+        <!-- Collapsible Sales Menu -->
+        <li class="collapsible">
+          <a href="#" class="collapsible-header">
+            <i class="fa-solid fa-sack-dollar"></i>
+            <span class="link-text">Sales</span>
+            <i class="fa-solid fa-chevron-down arrow"></i>
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#" class="nav-link" data-page="panel/sales/sales-overview.html">Sales Overview</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/sales/sale-details.html">Sale Details</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/sales/payment-types.html">Sale Payment Types</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/sales/return-exchange.html">Returns &amp; Exchange</a></li>
+          </ul>
+        </li>
+
+        <!-- Collapsible Inventory Menu -->
+        <li class="collapsible">
+          <a href="#" class="collapsible-header">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span class="link-text">Inventory</span>
+            <i class="fa-solid fa-chevron-down arrow"></i>
+          </a>
+          <ul class="sub-menu">
+            <!-- Updated link with data-page attribute -->
+            <li><a href="#" class="nav-link" id="product-list-page" data-page="panel/inventory/products.html">Product List</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/inventory/brands-categories.html">Brands &amp; Categories</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/inventory/stockout.html">Stockouts</a></li>
+          </ul>
+        </li>
+
+        <!-- Collapsible Employees Menu -->
+        <li class="collapsible">
+          <a href="#" class="collapsible-header">
+            <i class="fa-solid fa-users"></i>
+            <span class="link-text">Employees</span>
+            <i class="fa-solid fa-chevron-down arrow"></i>
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#" class="nav-link" data-page="panel/employees/employees.html">Employee List</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/employees/attendance.html">Attendance</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/employees/role-history.html">Role History</a></li>
+          </ul>
+        </li>
+
+        <!-- Collapsible Customers Menu -->
+        <li class="collapsible">
+          <a href="#" class="collapsible-header">
+            <i class="fa-solid fa-address-book"></i>
+            <span class="link-text">Customers</span>
+            <i class="fa-solid fa-chevron-down arrow"></i>
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#" class="nav-link" data-page="panel/customers/customer-list.html">Customer List</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/customers/customer-contact.html">Customer Contacts</a></li>
+          </ul>
+        </li>
+
+        <!-- Collapsible Suppliers Menu -->
+        <li class="collapsible">
+          <a href="#" class="collapsible-header">
+            <i class="fa-solid fa-truck"></i>
+            <span class="link-text">Suppliers</span>
+            <i class="fa-solid fa-chevron-down arrow"></i>
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#" class="nav-link" data-page="panel/suppliers/supplier-list.html">Supplier List</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/suppliers/supplier-contact.html">Supplier Contacts</a></li>
+            <li><a href="#" class="nav-link" data-page="panel/suppliers/supply-orders.html">Supply Orders</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="link-text">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <!-- Collapsible Toggle Button -->
+        <button class="toggle-btn" id="toggle-btn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <h1>Welcome to Jolens Dashboard</h1>
+      </div>
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle">
+        <i class="fa-solid fa-sun"></i>
+      </button>
+    </header>
+
+    <!-- Default Dashboard Content -->
+    <section id="defaultDashboard" class="dashboard-section">
+      <div class="dashboard-card">
+        <h2>Dashboard Overview</h2>
+        <p>Place your main stats or charts here.</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Sales</h2>
+        <p>Sales overview or quick stats here.</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Inventory</h2>
+        <p>Inventory metrics, restock alerts, etc.</p>
+      </div>
+      <div class="dashboard-card">
+        <h2>Employees</h2>
+        <p>Manage employee data or schedules here.</p>
+      </div>
+    </section>
+
+    <!-- Container for dynamically loaded content -->
+    <div id="mainContent" style="display: none;"></div>
+
+    <!-- Floating Settings Button -->
+    <a href="settings.html" class="settings-fab" aria-label="Settings">
+      <i class="fa-solid fa-cog"></i>
+    </a>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="dashboard.js"></script>
+  <script src="panel/inventory/products.js"></script>
+  <script src="panel/sales/sale-details.js"></script>
+  <script src="panel/sales/payment-types.js"></script>
+  <script src="panel/sales/return-exhange.js"></script>
+  <script src="panel/sales/sales-overview.js"></script>
+  <script src="panel/inventory/brands-categories.js"></script>
+  <script src="panel/inventory/stockout.js"></script>
+  <script src="panel/employees/employees.js"></script>
+  <script src="panel/employees/attendance.js"></script>
+  <script src="panel/employees/role-history.js"></script>
+  <script src="panel/customers/customer-list.js"></script>
+  <script src="panel/customers/customer-contact.js"></script>
+  <script src="panel/suppliers/supplier-list.js"></script>
+  <script src="panel/suppliers/supplier-contact.js"></script>
+  <script src="panel/suppliers/supply-orders.js"></script>
+
+</body>
+</html>

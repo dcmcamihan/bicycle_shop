@@ -1,0 +1,98 @@
+<div class="employees-page-container">
+  <h1>Employees List</h1>
+
+  <!-- Edit Employee Modal -->
+  <div class="modal" id="editEmployeeModal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Edit Employee</h2>
+      <form id="editEmployeeForm">
+        <div class="form-group">
+          <label for="editEmpName">Full Name</label>
+          <input type="text" id="editEmpName" required>
+        </div>
+        <div class="form-group">
+          <label for="editEmpGender">Gender</label>
+          <select id="editEmpGender" required>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="O">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editEmpStatus">Status</label>
+          <select id="editEmpStatus" required>
+            <option value="Active">Active</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Terminated">Terminated</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editEmpContact">Contact</label>
+          <input type="text" id="editEmpContact" required>
+        </div>
+        <div class="form-group">
+          <label for="editEmpImage">Upload Image</label>
+          <input type="file" id="editEmpImage" accept="image/*">
+        </div>
+        <button type="submit" class="btn-submit">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Employees Table -->
+  <table class="employees-table">
+    <thead>
+      <tr>
+        <th>Picture</th>
+        <th>Full Name</th>
+        <th>Gender</th>
+        <th>Status</th>
+        <th>Contact</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Example Row 1 -->
+      <tr data-emp-id="1">
+        <td>
+          <img src="panel/employees/employees-img/employee.png" alt="Employee 1" class="employee-photo">
+        </td>
+        <td>Jane Doe</td>
+        <td>F</td>
+        <td><span class="emp-status active">Active</span></td>
+        <td>+1 234 567 890</td>
+        <td>
+          <i class="fa-solid fa-eye view-icon"></i>
+        </td>
+      </tr>
+      <!-- Example Row 2 -->
+      <tr data-emp-id="2">
+        <td>
+          <img src="panel/employees/employees-img/employee.png" alt="Employee 2" class="employee-photo">
+        </td>
+        <td>John Smith</td>
+        <td>M</td>
+        <td><span class="emp-status on-leave">On Leave</span></td>
+        <td>+1 987 654 321</td>
+        <td>
+          <i class="fa-solid fa-eye view-icon"></i>
+        </td>
+      </tr>
+      <!-- Example Row 3 -->
+      <tr data-emp-id="3">
+        <td>
+          <!-- fallback if no image -->
+          <img src="panel/employees/employees-img/employee.png" alt="Employee 3" class="employee-photo">
+        </td>
+        <td>Mark Anthony</td>
+        <td>M</td>
+        <td><span class="emp-status terminated">Terminated</span></td>
+        <td>mark.anthony@jolens.com</td>
+        <td>
+          <i class="fa-solid fa-eye view-icon"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

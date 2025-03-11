@@ -1,0 +1,143 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.employees-page-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.employees-page-container h1 {
+  font-size: 2.5rem;
+  color: #ab0d07;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Employees Table */
+.employees-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.employees-table thead {
+  background-color: #333;
+}
+
+.employees-table th,
+.employees-table td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+  vertical-align: middle;
+}
+
+.employees-table th {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.employees-table tbody tr:hover {
+  background-color: #3a3a3a;
+}
+
+/* Employee Photo (circular) */
+.employee-photo {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid transparent; 
+  background: linear-gradient(45deg, #e1b6b3, #a74357, #a85c30); 
+  background-clip: padding-box; 
+  padding: 2px; 
+}
+
+/* Status styling */
+.emp-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #fff;
+}
+.emp-status.active {
+  background-color: #2cae74;
+}
+.emp-status.on-leave {
+  background-color: #f1c40f; /* yellowish */
+}
+.emp-status.terminated {
+  background-color: #c0392b;
+}
+
+/* Edit icon */
+.view-icon {
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s;
+  font-size: 1.2rem;
+}
+.view-icon:hover {
+  color: #fff;
+}
+
+/* LIGHT MODE OVERRIDES */
+body.light-mode .employees-table {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .employees-table thead {
+  background-color: #f7f7f7;
+}
+
+body.light-mode .employees-table th,
+body.light-mode .employees-table td {
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+body.light-mode .employees-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Light mode styling for status badges */
+body.light-mode .emp-status.active {
+  background-color: #2cae74;
+  color: #fff;
+}
+body.light-mode .emp-status.on-leave {
+  background-color: #f1c40f;
+  color: #333;
+}
+body.light-mode .emp-status.terminated {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+/* Light Mode for Employee Photo */
+body.light-mode .employee-photo {
+  border: 3px solid transparent; 
+  background: linear-gradient(45deg, #ffdfdf, #e57373, #ffb74d);
+  background-clip: padding-box; 
+}
+
+/* Light Mode View Icon */
+body.light-mode .view-icon {
+  color: #555;
+}
+body.light-mode .view-icon:hover {
+  color: #ab0d07;
+}

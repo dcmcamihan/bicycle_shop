@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Types | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+</head>
+<body>
+  <div class="payment-types-container">
+    <h1>Payment Types</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search payment types..." />
+      </div>
+      <button class="btn-add-payment" id="btnAddPayment">
+        <i class="fa-solid fa-plus"></i> Add Payment Type
+      </button>
+    </div>
+    
+    <!-- Payment Types Table -->
+    <table class="payment-types-table">
+      <thead>
+        <tr>
+          <th>Payment Type ID</th>
+          <th>Payment Method</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example Row 1 -->
+        <tr>
+          <td>PT001</td>
+          <td>Cash</td>
+          <td>Payment in cash</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-payment"></i>
+            <i class="fa-solid fa-trash delete-payment"></i>
+          </td>
+        </tr>
+        <!-- Example Row 2 -->
+        <tr>
+          <td>PT002</td>
+          <td>Card</td>
+          <td>Credit/Debit Card Payment</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-payment"></i>
+            <i class="fa-solid fa-trash delete-payment"></i>
+          </td>
+        </tr>
+        <!-- Example Row 3 -->
+        <tr>
+          <td>PT003</td>
+          <td>Online</td>
+          <td>Payment via online gateway</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-payment"></i>
+            <i class="fa-solid fa-trash delete-payment"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Pagination Controls (if needed) -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add/Edit Payment Modal -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closePaymentModal">&times;</span>
+      <h2 id="paymentModalTitle">Add Payment Type</h2>
+      <form id="paymentForm">
+        <div class="form-group">
+          <label for="paymentMethod">Payment Method</label>
+          <input type="text" id="paymentMethod" placeholder="e.g. Cash" required />
+        </div>
+        <div class="form-group">
+          <label for="paymentDescription">Description</label>
+          <input type="text" id="paymentDescription" placeholder="Description" />
+        </div>
+        <button type="submit" class="btn-submit">Save</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

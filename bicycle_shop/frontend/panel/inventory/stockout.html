@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stock Outs | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+  <div class="stockouts-container">
+    <h1>Stock Outs</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search stock outs..." />
+      </div>
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="product">Product</option>
+          <option value="brand">Brand</option>
+          <option value="date">Date</option>
+          <option value="reason">Reason</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Collapsible Stock Outs Table -->
+    <table class="collapsible-table">
+      <thead>
+        <tr>
+          <th></th> <!-- Arrow Column -->
+          <th>Stock Out ID</th>
+          <th>Date</th>
+          <th>Product</th>
+          <th>Brand</th>
+          <th>Quantity Out</th>
+          <th>Reason</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example Parent Row 1 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO001</td>
+          <td>2025-04-01</td>
+          <td>Brake Pads</td>
+          <td>Shimano</td>
+          <td>10</td>
+          <td>Damaged</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-stockout"></i>
+            <i class="fa-solid fa-trash delete-stockout"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Details</h3>
+              <p>Reorder recommended. Stock level below threshold.</p>
+            </div>
+          </td>
+        </tr>
+        <!-- Example Parent Row 2 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO002</td>
+          <td>2025-04-03</td>
+          <td>Mountain Bike</td>
+          <td>Giant</td>
+          <td>5</td>
+          <td>Sold Out</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-stockout"></i>
+            <i class="fa-solid fa-trash delete-stockout"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Details</h3>
+              <p>High demand led to rapid depletion. Reorder immediately.</p>
+            </div>
+          </td>
+        </tr>
+        <!-- Example Parent Row 3 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>SO003</td>
+          <td>2025-04-05</td>
+          <td>Helmet</td>
+          <td>Giro</td>
+          <td>15</td>
+          <td>Expired</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-stockout"></i>
+            <i class="fa-solid fa-trash delete-stockout"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Details</h3>
+              <p>Items expired. Removed from inventory.</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Controls Container: Pagination on left, Add Stock Out Button on right -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+      </div>
+      <button class="btn-add-stockout" id="btnAddStockoutBottom">Add Stock Out</button>
+    </div>
+  </div>
+  
+  <!-- Add Stock Out Modal -->
+  <div class="modal" id="addStockoutModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeAddStockoutModal">&times;</span>
+      <h2>Add Stock Out</h2>
+      <form id="addStockoutForm">
+        <div class="form-group">
+          <label for="stockoutProduct">Product</label>
+          <input type="text" id="stockoutProduct" placeholder="Product Name" required />
+        </div>
+        <div class="form-group">
+          <label for="stockoutBrand">Brand</label>
+          <input type="text" id="stockoutBrand" placeholder="Brand Name" required />
+        </div>
+        <div class="form-group">
+          <label for="stockoutDate">Date</label>
+          <input type="date" id="stockoutDate" required />
+        </div>
+        <div class="form-group">
+          <label for="stockoutQuantity">Quantity Out</label>
+          <input type="number" id="stockoutQuantity" placeholder="Quantity" required />
+        </div>
+        <div class="form-group">
+          <label for="stockoutReason">Reason</label>
+          <input type="text" id="stockoutReason" placeholder="e.g. Damaged, Sold Out, Expired" required />
+        </div>
+        <button type="submit" class="btn-submit">Add Stock Out</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Edit Stock Out Modal -->
+  <div class="modal" id="editStockoutModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditStockoutModal">&times;</span>
+      <h2>Edit Stock Out</h2>
+      <form id="editStockoutForm">
+        <input type="hidden" id="editStockoutIndex" />
+        <div class="form-group">
+          <label for="editStockoutID">Stock Out ID</label>
+          <input type="text" id="editStockoutID" disabled />
+        </div>
+        <div class="form-group">
+          <label for="editStockoutProduct">Product</label>
+          <input type="text" id="editStockoutProduct" required />
+        </div>
+        <div class="form-group">
+          <label for="editStockoutBrand">Brand</label>
+          <input type="text" id="editStockoutBrand" required />
+        </div>
+        <div class="form-group">
+          <label for="editStockoutDate">Date</label>
+          <input type="date" id="editStockoutDate" required />
+        </div>
+        <div class="form-group">
+          <label for="editStockoutQuantity">Quantity Out</label>
+          <input type="number" id="editStockoutQuantity" required />
+        </div>
+        <div class="form-group">
+          <label for="editStockoutReason">Reason</label>
+          <input type="text" id="editStockoutReason" required />
+        </div>
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Stock Outs JS -->
+  <script src="stockouts.js"></script>
+</body>
+</html>

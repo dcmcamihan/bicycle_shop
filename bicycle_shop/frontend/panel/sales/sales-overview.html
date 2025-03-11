@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Overview | Jolens Bicycle Supply</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Chart.js for visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="sales-overview-container">
+    <h1>Sales Overview</h1>
+    
+    <!-- Metrics Cards -->
+    <div class="metrics-cards">
+      <div class="card metric-card">
+        <h3>Total Revenue</h3>
+        <p id="totalRevenue">$0</p>
+      </div>
+      <div class="card metric-card">
+        <h3>Transactions</h3>
+        <p id="transactionCount">0</p>
+      </div>
+      <div class="card metric-card">
+        <h3>Average Order Value</h3>
+        <p id="avgOrderValue">$0</p>
+      </div>
+    </div>
+    
+    <!-- Charts Container -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Sales Trends</h3>
+        <canvas id="salesTrendsChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Payment Methods Breakdown</h3>
+        <canvas id="paymentMethodsChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Top Selling Products</h3>
+        <canvas id="topSellingChart"></canvas>
+      </div>
+    </div>
+    
+    <!-- Recent Transactions -->
+    <div class="recent-transactions">
+      <h3>Recent Transactions</h3>
+      <table class="recent-transactions-table">
+        <thead>
+          <tr>
+            <th>Sale ID</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Total Amount</th>
+            <th>Payment Method</th>
+          </tr>
+        </thead>
+        <tbody id="recentTransactionsTbody">
+          <!-- Sample rows will be inserted by JS -->
+          <tr>
+            <td>S001</td>
+            <td>2025-03-10</td>
+            <td>Alice Johnson</td>
+            <td>$1200</td>
+            <td>Cash</td>
+          </tr>
+          <tr>
+            <td>S002</td>
+            <td>2025-03-11</td>
+            <td>Charlie Davis</td>
+            <td>$450</td>
+            <td>Card</td>
+          </tr>
+          <tr>
+            <td>S003</td>
+            <td>2025-03-12</td>
+            <td>Emily White</td>
+            <td>$950</td>
+            <td>Card</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

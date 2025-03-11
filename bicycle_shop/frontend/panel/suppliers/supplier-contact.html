@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Supplier Contact | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+  <div class="supplier-contact-container">
+    <h1>Supplier Contacts</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search contacts..." id="searchInput">
+      </div>
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="supplier">Supplier</option>
+          <option value="type">Contact Type</option>
+          <option value="value">Contact Value</option>
+        </select>
+      </div>
+      <button class="btn-add-supplier-contact" id="btnAddSupplierContact">
+        <i class="fa-solid fa-plus"></i> Add Contact
+      </button>
+    </div>
+    
+    <!-- Supplier Contact Table -->
+    <table class="supplier-contact-table">
+      <thead>
+        <tr>
+          <th>Contact ID</th>
+          <th>Supplier</th>
+          <th>Contact Type</th>
+          <th>Contact Value</th>
+          <th>Primary</th>
+          <th>Active</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Sample Data Row 1 -->
+        <tr>
+          <td>1</td>
+          <td>CycleWorld</td>
+          <td>PHONE</td>
+          <td>+639171234567</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-contact"></i>
+            <i class="fa-solid fa-trash delete-contact"></i>
+          </td>
+        </tr>
+        <!-- Sample Data Row 2 -->
+        <tr>
+          <td>2</td>
+          <td>BikePro</td>
+          <td>EMAIL</td>
+          <td>contact@bikepro.com</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-contact"></i>
+            <i class="fa-solid fa-trash delete-contact"></i>
+          </td>
+        </tr>
+        <!-- Sample Data Row 3 -->
+        <tr>
+          <td>3</td>
+          <td>VeloMax</td>
+          <td>PHONE</td>
+          <td>+639181234567</td>
+          <td>No</td>
+          <td>Yes</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-contact"></i>
+            <i class="fa-solid fa-trash delete-contact"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Table Controls: Pagination & Bottom Add Button -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add Supplier Contact Modal -->
+  <div class="modal" id="addSupplierContactModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeAddSupplierContactModal">&times;</span>
+      <h2>Add Supplier Contact</h2>
+      <form id="addSupplierContactForm">
+        <div class="form-group">
+          <label for="contactSupplier">Supplier Name</label>
+          <input type="text" id="contactSupplier" placeholder="e.g. CycleWorld" required />
+        </div>
+        <div class="form-group">
+          <label for="contactType">Contact Type</label>
+          <input type="text" id="contactType" placeholder="e.g. PHONE, EMAIL" required />
+        </div>
+        <div class="form-group">
+          <label for="contactValue">Contact Value</label>
+          <input type="text" id="contactValue" placeholder="e.g. +639171234567 or email@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="isPrimary">Is Primary</label>
+          <select id="isPrimary" required>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="isActive">Is Active</label>
+          <select id="isActive" required>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">Add Contact</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Edit Supplier Contact Modal -->
+  <div class="modal" id="editSupplierContactModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditSupplierContactModal">&times;</span>
+      <h2>Edit Supplier Contact</h2>
+      <form id="editSupplierContactForm">
+        <input type="hidden" id="editSupplierContactIndex">
+        <div class="form-group">
+          <label for="editContactID">Contact ID</label>
+          <input type="text" id="editContactID" disabled />
+        </div>
+        <div class="form-group">
+          <label for="editContactSupplier">Supplier Name</label>
+          <input type="text" id="editContactSupplier" required />
+        </div>
+        <div class="form-group">
+          <label for="editContactType">Contact Type</label>
+          <input type="text" id="editContactType" required />
+        </div>
+        <div class="form-group">
+          <label for="editContactValue">Contact Value</label>
+          <input type="text" id="editContactValue" required />
+        </div>
+        <div class="form-group">
+          <label for="editIsPrimary">Is Primary</label>
+          <select id="editIsPrimary" required>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editIsActive">Is Active</label>
+          <select id="editIsActive" required>
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

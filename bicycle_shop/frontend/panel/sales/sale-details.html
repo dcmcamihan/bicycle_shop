@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sale Details | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+  <div class="sale-page-container">
+    <h1>Sale Details</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search sales..." />
+      </div>
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="customer">Customer</option>
+          <option value="date">Date</option>
+          <option value="payment">Payment Method</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Collapsible Sale Table -->
+    <table class="collapsible-table">
+      <thead>
+        <tr>
+          <th></th> <!-- arrow column -->
+          <th>Sale ID</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Cashier/Manager</th>
+          <th>Total Amount</th>
+          <th>Payment Method</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Sale Record 1 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>S001</td>
+          <td>2025-03-10</td>
+          <td>Alice Johnson</td>
+          <td>Bob Smith</td>
+          <td>$1200</td>
+          <td>Cash</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-sale"></i>
+            <i class="fa-solid fa-trash delete-sale"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Sale Details</h3>
+              <table class="sale-detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Sold</th>
+                    <th>Price Per Unit</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bicycle</td>
+                    <td>1</td>
+                    <td>$800</td>
+                    <td>$800</td>
+                  </tr>
+                  <tr>
+                    <td>Helmet</td>
+                    <td>1</td>
+                    <td>$200</td>
+                    <td>$200</td>
+                  </tr>
+                  <tr>
+                    <td>Gloves</td>
+                    <td>2</td>
+                    <td>$100</td>
+                    <td>$200</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <!-- Sale Record 2 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>S002</td>
+          <td>2025-03-11</td>
+          <td>Charlie Davis</td>
+          <td>Diana Evans</td>
+          <td>$450</td>
+          <td>Card</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-sale"></i>
+            <i class="fa-solid fa-trash delete-sale"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Sale Details</h3>
+              <table class="sale-detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Sold</th>
+                    <th>Price Per Unit</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Bicycle</td>
+                    <td>1</td>
+                    <td>$450</td>
+                    <td>$450</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+        <!-- Sale Record 3 -->
+        <tr class="parent-row">
+          <td class="toggle-cell">
+            <i class="fa-solid fa-chevron-right toggle-btn"></i>
+          </td>
+          <td>S003</td>
+          <td>2025-03-12</td>
+          <td>Emily White</td>
+          <td>Frank Brown</td>
+          <td>$950</td>
+          <td>Card</td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-sale"></i>
+            <i class="fa-solid fa-trash delete-sale"></i>
+          </td>
+        </tr>
+        <tr class="child-row">
+          <td colspan="8">
+            <div class="child-content">
+              <h3>Sale Details</h3>
+              <table class="sale-detail-table">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Sold</th>
+                    <th>Price Per Unit</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Helmet</td>
+                    <td>1</td>
+                    <td>$150</td>
+                    <td>$150</td>
+                  </tr>
+                  <tr>
+                    <td>Cycling Jersey</td>
+                    <td>1</td>
+                    <td>$800</td>
+                    <td>$800</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Table Controls: Pagination & Add Sale Button -->
+    <div class="table-controls">
+        <button class="btn-add-sale" id="btnAddSale">
+        <i class="fa-solid fa-plus"></i> Add Sale
+        </button>
+        <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+        </div>
+    </div>
+  
+  <!-- Modals for Adding/Editing Sales and Sale Details -->
+  <div class="modal" id="addSaleModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeAddSaleModal">&times;</span>
+      <h2>Add Sale</h2>
+      <form id="addSaleForm">
+        <div class="form-group">
+          <label for="saleCustomer">Customer</label>
+          <input type="text" id="saleCustomer" placeholder="Customer Name" required />
+        </div>
+        <div class="form-group">
+          <label for="saleDate">Date</label>
+          <input type="date" id="saleDate" required />
+        </div>
+        <div class="form-group">
+          <label for="saleCashier">Cashier</label>
+          <input type="text" id="saleCashier" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+          <label for="salePayment">Payment Method</label>
+          <input type="text" id="salePayment" placeholder="e.g. Cash, Card" required />
+        </div>
+        <div class="form-group">
+          <label for="saleTotal">Total Amount</label>
+          <input type="number" id="saleTotal" placeholder="Total" required />
+        </div>
+        <button type="submit" class="btn-submit">Add Sale</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="modal" id="editSaleModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditSaleModal">&times;</span>
+      <h2>Edit Sale</h2>
+      <form id="editSaleForm">
+        <input type="hidden" id="editSaleIndex" />
+        <div class="form-group">
+          <label for="editSaleID">Sale ID</label>
+          <input type="text" id="editSaleID" disabled />
+        </div>
+        <div class="form-group">
+          <label for="editSaleCustomer">Customer</label>
+          <input type="text" id="editSaleCustomer" required />
+        </div>
+        <div class="form-group">
+          <label for="editSaleDate">Date</label>
+          <input type="date" id="editSaleDate" required />
+        </div>
+        <div class="form-group">
+          <label for="editSaleCashier">Cashier/Manager</label>
+          <input type="text" id="editSaleCashier" required />
+        </div>
+        <div class="form-group">
+          <label for="editSalePayment">Payment Method</label>
+          <input type="text" id="editSalePayment" required />
+        </div>
+        <div class="form-group">
+          <label for="editSaleTotal">Total Amount</label>
+          <input type="number" id="editSaleTotal" required />
+        </div>
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  
+  <div class="modal" id="editSaleDetailModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeEditSaleDetailModal">&times;</span>
+      <h2>Edit Sale Detail</h2>
+      <form id="editSaleDetailForm">
+        <input type="hidden" id="editSaleDetailIndex" />
+        <div class="form-group">
+          <label for="editProductName">Product Name</label>
+          <input type="text" id="editProductName" required />
+        </div>
+        <div class="form-group">
+          <label for="editQuantitySold">Quantity Sold</label>
+          <input type="number" id="editQuantitySold" required />
+        </div>
+        <div class="form-group">
+          <label for="editPricePerUnit">Price Per Unit</label>
+          <input type="number" id="editPricePerUnit" required />
+        </div>
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

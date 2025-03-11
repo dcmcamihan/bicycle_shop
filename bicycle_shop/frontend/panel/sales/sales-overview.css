@@ -1,0 +1,155 @@
+/* sales-overview.css */
+
+/* Global Styles */
+.sales-overview-container {
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.sales-overview-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ab0d07;
+  font-size: 2.5rem;
+}
+
+/* Metrics Cards */
+.metrics-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-card {
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.metric-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.metric-card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ab0d07;
+}
+
+/* Charts Container */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-card {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  flex: 1;
+  min-width: 300px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.chart-card h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* Recent Transactions Table */
+.recent-transactions {
+  margin-top: 30px;
+}
+
+.recent-transactions h3 {
+  margin-bottom: 10px;
+  color: #ab0d07;
+  text-align: center;
+}
+
+.recent-transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.recent-transactions-table th,
+.recent-transactions-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+  color: #fff;
+}
+
+.recent-transactions-table th {
+  background-color: #333;
+  font-weight: 600;
+}
+
+.recent-transactions-table tbody tr:hover {
+  background-color: #3a3a3a;
+}
+
+/* Pagination (if needed) */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Light Mode Overrides */
+body.light-mode .sales-overview-container {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+body.light-mode .sales-overview-container h1 {
+  color: #ab0d07;
+}
+
+body.light-mode .metric-card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.light-mode .metric-card p {
+  color: #ab0d07;
+}
+
+body.light-mode .chart-card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.light-mode .chart-card h3 {
+  color: #333;
+}
+
+body.light-mode .recent-transactions-table {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.light-mode .recent-transactions-table th,
+body.light-mode .recent-transactions-table td {
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+
+body.light-mode .recent-transactions-table th {
+  background-color: #f7f7f7;
+}

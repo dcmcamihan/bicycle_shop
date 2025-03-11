@@ -1,0 +1,274 @@
+/* Reset & Global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Oswald", sans-serif;
+    background-color: #1a1a1a;
+    color: #fff;
+  }
+  
+  /* Container */
+  .customer-list-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  /* Page Title */
+  .customer-list-container h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #ab0d07;
+    margin-bottom: 20px;
+  }
+  
+  /* Search & Filter Container */
+  .search-filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  .search-bar {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    border-radius: 4px;
+    padding: 0 10px;
+  }
+  .search-bar i {
+    color: #aaa;
+    margin-right: 8px;
+  }
+  .search-bar input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    width: 100%;
+    font-size: 1rem;
+  }
+  .filter-dropdown select {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  /* Add Customer Button */
+  .btn-add-customer {
+    background-color: #ab0d07;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: "Oswald", sans-serif;
+    transition: background 0.3s ease;
+  }
+  .btn-add-customer:hover {
+    background-color: #900c06;
+  }
+  
+  /* Customer Table */
+  .customer-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+  .customer-table thead {
+    background-color: #333;
+  }
+  .customer-table th,
+  .customer-table td {
+    padding: 14px 20px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    vertical-align: middle;
+  }
+  .customer-table th {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1rem;
+  }
+  .customer-table tbody tr:hover {
+    background-color: #3a3a3a;
+  }
+  
+  /* Table Controls: Pagination & Add Button */
+  .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pagination button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .pagination button:hover {
+    background-color: #444;
+  }
+  .pagination button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+  }
+  .pagination span {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #ccc;
+  }
+  
+  /* Modals */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+  }
+  .modal-content {
+    background-color: #2a2a2a;
+    margin: 60px auto;
+    padding: 20px;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 8px;
+    position: relative;
+    color: #fff;
+  }
+  .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #fff;
+  }
+  .modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ab0d07;
+    font-size: 1.4rem;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="date"],
+  .form-group input[type="number"],
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+  .btn-submit {
+    background-color: #ab0d07;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: "Oswald", sans-serif;
+    font-size: 1rem;
+    transition: background 0.3s;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .btn-submit:hover {
+    background-color: #900c06;
+  }
+  
+  /* Light Mode Overrides */
+  body.light-mode {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  body.light-mode .customer-list-container h1 {
+    color: #ab0d07;
+  }
+  body.light-mode .customer-table {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  body.light-mode .customer-table thead {
+    background-color: #f7f7f7;
+  }
+  body.light-mode .customer-table th,
+  body.light-mode .customer-table td {
+    border-bottom: 1px solid #eee;
+    color: #333;
+  }
+  body.light-mode .customer-table tbody tr:hover {
+    background-color: #f0f0f0;
+  }
+  body.light-mode .table-controls .pagination button {
+    background-color: #ddd;
+    color: #333;
+  }
+  body.light-mode .table-controls .pagination button:hover {
+    background-color: #ccc;
+  }
+  body.light-mode .modal-content {
+    background-color: #fff;
+    color: #333;
+  }
+  body.light-mode .close-modal {
+    color: #333;
+  }
+  body.light-mode .form-group input,
+  body.light-mode .form-group select {
+    background-color: #f4f4f4;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  body.light-mode .btn-submit {
+    background-color: #ab0d07;
+    color: #fff;
+  }
+  body.light-mode .btn-submit:hover {
+    background-color: #900c06;
+  }
+  body.light-mode .btn-add-customer {
+    background-color: #ab0d07;
+    color: #fff;
+  }
+  body.light-mode .btn-add-customer:hover {
+    background-color: #900c06;
+  }
+  
