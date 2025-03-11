@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Define an initialization function for the products page
   function initProducts() {
+    // Pagination variables
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let allProductRows = [];
     // Fetch categories and brands data from the API
     Promise.all([
       fetch('http://127.0.0.1:3000/api/categories').then(response => response.json()),
@@ -65,7 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedBrand = filterBrand.value;
             const selectedCategory = filterCategory.value;
             const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const tableBody = document.getElementById('productTableBody');
             tableBody.innerHTML = ''; // Clear existing rows
+
+            // *** Pagination-related change: reset the rows array and page counter ***
+            allProductRows = [];
+            currentPage = 1;
+            
             products
               .filter(product => (selectedBrand === 'all' || product.brand_id == selectedBrand) &&
                                  (selectedCategory === 'all' || product.category_code == selectedCategory) &&
@@ -182,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Function to add a new product row to the table
     function addNewProductRow(imgSrc, name, category, brand, price, status, quantityInStock = 0) {
+      // Get reference to the table body (do not append directly anymore)
       const tableBody = document.querySelector(".collapsible-table tbody");
-      if (!tableBody) return;
 
       const parentRow = document.createElement("tr");
       parentRow.classList.add("parent-row");
@@ -217,9 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
       `;
 
-      tableBody.appendChild(parentRow);
-      tableBody.appendChild(childRow);
-
       // Attach toggle functionality for the new row
       const toggleBtn = parentRow.querySelector(".toggle-btn");
       toggleBtn.addEventListener("click", () => {
@@ -235,7 +242,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Attach delete functionality for the new row
       attachDeleteFunctionality(parentRow);
+
+      // *** Pagination-related change: ***
+      // Instead of appending the rows directly, push them into the allProductRows array...
+      allProductRows.push({ parentRow, childRow });
+      // ...and then render the current page.
+      renderPage();
     }
+
+    function renderPage() {
+      const tableBody = document.querySelector(".collapsible-table tbody");
+      tableBody.innerHTML = ""; // Clear existing rows
+    
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const rowsToShow = allProductRows.slice(start, end);
+    
+      rowsToShow.forEach(rowObj => {
+        tableBody.appendChild(rowObj.parentRow);
+        tableBody.appendChild(rowObj.childRow);
+      });
+    
+      // Update pagination controls
+      document.getElementById('pageNumber').textContent = currentPage;
+      document.getElementById('prevPage').disabled = currentPage === 1;
+      document.getElementById('nextPage').disabled = end >= allProductRows.length;
+    }    
 
     // 7. Attach delete functionality to a product row (for new rows)
     function attachDeleteFunctionality(parentRow) {
@@ -310,6 +342,21 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.style.display = "none";
       }
     });
+
+    document.getElementById('prevPage').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage();
+      }
+    });
+    
+    document.getElementById('nextPage').addEventListener('click', () => {
+      if (currentPage * rowsPerPage < allProductRows.length) {
+        currentPage++;
+        renderPage();
+      }
+    });
+    
   }
 
   // Expose the initialization function so it can be called from dashboard.js
