@@ -25,6 +25,7 @@ function initAttendance() {
   let editAttendanceIndex = null;
 
   let attendanceData = [];
+  let totalEmployees = 0;
 
   // Fetch attendance data from the API
   function fetchAttendanceData() {
@@ -37,6 +38,19 @@ function initAttendance() {
       })
       .catch(error => {
         console.error('Error fetching attendance data:', error);
+      });
+  }
+
+  // Fetch total employees data from the API
+  function fetchTotalEmployees() {
+    return fetch('http://127.0.0.1:3000/api/employees')
+      .then(response => response.json())
+      .then(data => {
+        totalEmployees = data.length;
+        updateSummaryBoxes();
+      })
+      .catch(error => {
+        console.error('Error fetching total employees:', error);
       });
   }
 
@@ -236,16 +250,23 @@ function initAttendance() {
       "Medical Leave": 0,
       "Parental Leave": 0,
     };
+    const uniquePresentEmployees = new Set();
+    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
     attendanceData.forEach(attendance => {
+      if (attendance.date === currentDate && attendance.attendance_status === "Present") {
+        uniquePresentEmployees.add(attendance.employee_id);
+      }
       if (counts.hasOwnProperty(attendance.attendance_status)) {
         counts[attendance.attendance_status]++;
       }
     });
-    document.getElementById("presentCount").textContent = counts["Present"];
+
+    document.getElementById("presentCount").textContent = uniquePresentEmployees.size;
     document.getElementById("absentCount").textContent = counts["Absent"];
     document.getElementById("otherCount").textContent =
       counts["Suspended"] + counts["Furloughed"] + counts["Medical Leave"] + counts["Parental Leave"];
-    document.getElementById("totalEmployees").textContent = attendanceData.length;
+    document.getElementById("totalEmployees").textContent = totalEmployees;
   }
 
   // --- Pagination Logic ---
@@ -394,6 +415,7 @@ function initAttendance() {
 
   // --- Initial Render ---
   fetchAttendanceData();
+  fetchTotalEmployees();
 }
 
 // Expose the initialization function so it can be called externally
