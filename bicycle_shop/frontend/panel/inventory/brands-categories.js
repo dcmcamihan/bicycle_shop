@@ -14,8 +14,7 @@ function initBrandsCategories() {
     });
   });
 
-  // --- NEW: API Data Loading Functions ---
-  // Add these functions to load brands and categories from your API endpoints
+  // Functions to load brands and categories from your API endpoints
 
   function loadBrands() {
     fetch('http://127.0.0.1:3000/api/brands')

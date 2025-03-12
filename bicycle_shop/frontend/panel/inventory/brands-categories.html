@@ -18,36 +18,15 @@
       <button class="tab-button active" data-tab="brands">Brands</button>
       <button class="tab-button" data-tab="categories">Categories</button>
     </div>
+    
     <!-- Brands Tab -->
     <div class="tab-content active" id="brands">
-      <div class="brand-list">
-        <!-- Example Brand Card -->
-        <div class="brand-card">
-          <div class="brand-avatar">
-            <div class="default-avatar">SH</div>
-          </div>
-          <h3>Shimano</h3>
-          <p>Origin: Japan</p>
-          <div class="card-actions">
-            <i class="fa-solid fa-pen-to-square edit-brand"></i>
-            <i class="fa-solid fa-trash delete-brand"></i>
-          </div>
-        </div>
-        <div class="brand-card">
-          <div class="brand-avatar">
-            <div class="default-avatar">T</div>
-          </div>
-          <h3>Trek</h3>
-          <p>Origin: USA</p>
-          <div class="card-actions">
-            <i class="fa-solid fa-pen-to-square edit-brand"></i>
-            <i class="fa-solid fa-trash delete-brand"></i>
-          </div>
-        </div>
+      <div class="brand-list" id="brandList">
+        <!-- Brands will be inserted here dynamically -->
       </div>
-      <!-- Add Brand Button -->
       <button class="btn-add" id="addBrandBtn">Add Brand</button>
     </div>
+    
     <!-- Categories Tab -->
     <div class="tab-content" id="categories">
       <table class="categories-table">
@@ -58,45 +37,28 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Example Category Row -->
-          <tr data-cat-code="BIKECOMP">
-            <td>BIKECOMP</td>
-            <td>Bike Components</td>
-            <td>
-              <i class="fa-solid fa-pen-to-square edit-category"></i>
-              <i class="fa-solid fa-trash delete-category"></i>
-            </td>
-          </tr>
-          <tr data-cat-code="CYCACCES">
-            <td>CYCACCES</td>
-            <td>Cycling Accessories</td>
-            <td>
-              <i class="fa-solid fa-pen-to-square edit-category"></i>
-              <i class="fa-solid fa-trash delete-category"></i>
-            </td>
-          </tr>
+        <tbody id="categoryList">
+          <!-- Categories will be inserted here dynamically -->
         </tbody>
       </table>
-      <!-- Add Category Button -->
       <button class="btn-add" id="addCategoryBtn">Add Category</button>
     </div>
   </div>
 
-  <!-- Modal for both Brands & Categories -->
+  <!-- Modal for Brands & Categories -->
   <div class="modal" id="bcModal">
     <div class="modal-content">
-      <span class="close-modal">&times;</span>
+      <span class="close-modal" id="closeModal">&times;</span>
       <h2 id="modalTitle">Edit</h2>
       <form id="bcForm">
-        <!-- Brand fields -->
+        <!-- Brand Fields -->
         <div class="form-group" id="brandGroup">
           <label for="brandName">Brand Name</label>
           <input type="text" id="brandName" placeholder="e.g. Shimano" required>
           <label for="brandOrigin">Origin</label>
           <input type="text" id="brandOrigin" placeholder="e.g. Japan" required>
         </div>
-        <!-- Category fields -->
+        <!-- Category Fields -->
         <div class="form-group" id="categoryGroup" style="display: none;">
           <label for="categoryCode">Category Code</label>
           <input type="text" id="categoryCode" placeholder="e.g. BIKECOMP" required>
@@ -107,5 +69,7 @@
       </form>
     </div>
   </div>
+
+  <script src="brandsCategories.js"></script>
 </body>
 </html>

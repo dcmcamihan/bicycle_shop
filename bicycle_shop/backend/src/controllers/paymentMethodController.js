@@ -1,8 +1,12 @@
-const PaymentMethod = require('../models/paymentMethodModel');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
 exports.getAllPaymentMethods = async (req, res) => {
     try {
-        const paymentMethods = await PaymentMethod.findAll();
+        const paymentMethods = await sequelize.query(
+            `SELECT * FROM payment_method`,
+            { type: QueryTypes.SELECT }
+        );
         res.json(paymentMethods);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -11,9 +15,16 @@ exports.getAllPaymentMethods = async (req, res) => {
 
 exports.getPaymentMethodByCode = async (req, res) => {
     try {
-        const paymentMethod = await PaymentMethod.findByPk(req.params.code);
-        if (paymentMethod) {
-            res.json(paymentMethod);
+        const paymentMethod = await sequelize.query(
+            `SELECT * FROM payment_method WHERE payment_method_code = :payment_method_code`,
+            {
+                type: QueryTypes.SELECT,
+                replacements: { payment_method_code: req.params.code }
+            }
+        );
+
+        if (paymentMethod.length > 0) {
+            res.json(paymentMethod[0]);
         } else {
             res.status(404).json({ message: 'Payment method not found' });
         }
@@ -24,8 +35,19 @@ exports.getPaymentMethodByCode = async (req, res) => {
 
 exports.createPaymentMethod = async (req, res) => {
     try {
-        const newPaymentMethod = await PaymentMethod.create(req.body);
-        res.status(201).json(newPaymentMethod);
+        const [result] = await sequelize.query(
+            `INSERT INTO payment_method (payment_method_code, description)
+             VALUES (:payment_method_code, :description)`,
+            {
+                type: QueryTypes.INSERT,
+                replacements: {
+                    payment_method_code: req.body.payment_method_code,
+                    description: req.body.description
+                }
+            }
+        );
+
+        res.status(201).json({ message: 'Payment method created successfully', payment_method_code: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,12 +55,27 @@ exports.createPaymentMethod = async (req, res) => {
 
 exports.updatePaymentMethod = async (req, res) => {
     try {
-        const [updated] = await PaymentMethod.update(req.body, {
-            where: { payment_method_code: req.params.code }
-        });
+        const [updated] = await sequelize.query(
+            `UPDATE payment_method SET description = :description
+             WHERE payment_method_code = :payment_method_code`,
+            {
+                type: QueryTypes.UPDATE,
+                replacements: {
+                    description: req.body.description,
+                    payment_method_code: req.params.code
+                }
+            }
+        );
+
         if (updated) {
-            const updatedPaymentMethod = await PaymentMethod.findByPk(req.params.code);
-            res.json(updatedPaymentMethod);
+            const updatedPaymentMethod = await sequelize.query(
+                `SELECT * FROM payment_method WHERE payment_method_code = :payment_method_code`,
+                {
+                    type: QueryTypes.SELECT,
+                    replacements: { payment_method_code: req.params.code }
+                }
+            );
+            res.json(updatedPaymentMethod[0]);
         } else {
             res.status(404).json({ message: 'Payment method not found' });
         }
@@ -49,9 +86,14 @@ exports.updatePaymentMethod = async (req, res) => {
 
 exports.deletePaymentMethod = async (req, res) => {
     try {
-        const deleted = await PaymentMethod.destroy({
-            where: { payment_method_code: req.params.code }
-        });
+        const deleted = await sequelize.query(
+            `DELETE FROM payment_method WHERE payment_method_code = :payment_method_code`,
+            {
+                type: QueryTypes.DELETE,
+                replacements: { payment_method_code: req.params.code }
+            }
+        );
+
         if (deleted) {
             res.status(204).json();
         } else {

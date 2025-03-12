@@ -1,257 +1,289 @@
-function initEmployees() {
-  // Modal elements
-  const editEmployeeModal = document.getElementById("editEmployeeModal");
-  const closeEditModal = document.querySelector(".close-modal");
-  const editEmployeeForm = document.getElementById("editEmployeeForm");
-  const editEmpImageInput = document.getElementById("editEmpImage");
+document.addEventListener('DOMContentLoaded', () => {
+  let statusMap = {};
 
-  let currentEditingEmployee = null; // Tracks the employee row being edited
-  let employeeData = []; // Stores employees fetched from API
-  let statusMap = {}; // Maps status codes to descriptions
-
-  // Pagination variables
-  let currentPage = 1;
-  const rowsPerPage = 10;
-  let allEmployeeRows = [];
-
-  // Fetch all statuses from the API and store in statusMap
-  function loadStatuses() {
-    return fetch("http://127.0.0.1:3000/api/statuses")
-      .then(response => response.json())
-      .then(data => {
-        statusMap = data.reduce((map, status) => {
+  function initEmployeeList() {
+    fetchStatuses()
+      .then(statuses => {
+        statusMap = statuses.reduce((map, status) => {
           map[status.status_code] = status.description;
           return map;
         }, {});
+        return fetchEmployees();
       })
-      .catch(error => console.error("Error fetching statuses:", error));
-  }
-
-  // Fetch employees and process their data
-  function loadEmployees() {
-    fetch("http://127.0.0.1:3000/api/employees")
-      .then(response => response.json())
-      .then(data => {
-        employeeData = data.map(emp => {
-          // Concatenate names to form fullName
-          let fullName = `${emp.first_name} ${emp.middle_name ? emp.middle_name + " " : ""}${emp.last_name}`;
-          let primaryContact = "N/A";
-          if (emp.contacts && emp.contacts.length > 0) {
-            const primary = emp.contacts.find(c => c.is_primary === "Y" || c.is_primary === true);
-            if (primary) {
-              primaryContact = `${primary.contact_type_desc}: ${primary.contact_value}`;
-            } else {
-              primaryContact = `${emp.contacts[0].contact_type_desc}: ${emp.contacts[0].contact_value}`;
-            }
-          }
-          // Convert status code to description using statusMap
-          const statusDesc = statusMap[emp.employee_status] || emp.employee_status;
-          // Use provided photo or fallback image
-          const photo = emp.photo || "panel/employees/employees-img/employee.png";
-          return {
-            employee_id: emp.employee_id,
-            fullName,
-            gender: emp.gender,
-            status: statusDesc,
-            primaryContact,
-            photo
-          };
-        });
+      .then(employees => {
+        employeeData = employees;
         renderTable();
       })
-      .catch(error => console.error("Error fetching employees:", error));
-  }
-
-  // Render employees table dynamically
-  function renderTable() {
-    const tbody = document.querySelector(".employees-table tbody");
-    tbody.innerHTML = "";
-    allEmployeeRows = employeeData.map(employee => {
-      // Determine status class based on status text (case-insensitive)
-      let statusClass = "";
-      switch (employee.status.toLowerCase()) {
-        case "active":
-          statusClass = "active";
-          break;
-        case "probationary":
-          statusClass = "probationary";
-          break;
-        case "part-time":
-          statusClass = "part-time";
-          break;
-        case "full-time":
-          statusClass = "full-time";
-          break;
-        case "terminated":
-          statusClass = "terminated";
-          break;
-        case "resigned":
-          statusClass = "resigned";
-          break;
-        case "retired":
-          statusClass = "retired";
-          break;
-        case "on leave":
-          statusClass = "on-leave";
-          break;
-        default:
-          statusClass = "";
-      }
-      const tr = document.createElement("tr");
-      tr.setAttribute("data-emp-id", employee.employee_id);
-      tr.innerHTML = `
-        <td><img src="${employee.photo}" alt="Employee Photo" class="employee-photo"></td>
-        <td>${employee.fullName}</td>
-        <td>${employee.gender}</td>
-        <td><span class="emp-status ${statusClass}">${employee.status}</span></td>
-        <td>${employee.primaryContact}</td>
-        <td><i class="fa-solid fa-pen-to-square edit-icon"></i></td>
-      `;
-      // Attach event listener to open edit modal when view icon is clicked
-      tr.querySelector(".edit-icon").addEventListener("click", () => {
-        openEditModal(tr);
+      .catch(error => {
+        console.error('Error fetching data:', error);
       });
-      return tr;
-    });
-    renderPage();
-  }
 
-  function renderPage() {
-    const tbody = document.querySelector(".employees-table tbody");
-    tbody.innerHTML = ""; // Clear existing rows
-
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const rowsToShow = allEmployeeRows.slice(start, end);
-
-    rowsToShow.forEach(row => {
-      tbody.appendChild(row);
-    });
-
-    // Update pagination controls
-    document.getElementById('pageNumber').textContent = currentPage;
-    document.getElementById('prevPage').disabled = currentPage === 1;
-    document.getElementById('nextPage').disabled = end >= allEmployeeRows.length;
-  }
-
-  document.getElementById('prevPage').addEventListener('click', () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderPage();
+    // Fetch employee data from the API
+    function fetchEmployees() {
+      return fetch('http://127.0.0.1:3000/api/employees')
+        .then(response => response.json())
+        .catch(error => {
+          console.error('Error fetching employees:', error);
+          throw error;
+        });
     }
-  });
 
-  document.getElementById('nextPage').addEventListener('click', () => {
-    if (currentPage * rowsPerPage < allEmployeeRows.length) {
-      currentPage++;
-      renderPage();
+    // Fetch status descriptions from the API
+    function fetchStatuses() {
+      return fetch('http://127.0.0.1:3000/api/statuses/reference/EMPLSTAT')
+        .then(response => response.json())
+        .catch(error => {
+          console.error('Error fetching statuses:', error);
+          throw error;
+        });
     }
-  });
 
-  // Open edit modal and populate fields with employee row data
-  function openEditModal(employeeRow) {
-    currentEditingEmployee = employeeRow;
-    // Column order: 0 = Picture, 1 = Full Name, 2 = Gender, 3 = Status, 4 = Contact
-    const empName = employeeRow.cells[1].textContent;
-    const empGender = employeeRow.cells[2].textContent;
-    const empStatus = employeeRow.cells[3].querySelector(".emp-status").textContent;
-    const empContact = employeeRow.cells[4].textContent;
+    // Populate the employee table with data
+    function populateEmployeeTable(employees) {
+      const employeeTbody = document.getElementById('employeeTbody');
+      employeeTbody.innerHTML = ''; // Clear existing rows
 
-    document.getElementById("editEmpName").value = empName;
-    document.getElementById("editEmpGender").value = empGender;
-    document.getElementById("editEmpStatus").value = empStatus;
-    document.getElementById("editEmpContact").value = empContact;
+      employees.forEach((employee, index) => {
+        const gender = employee.gender === 'M' ? 'Male' : employee.gender === 'F' ? 'Female' : 'Other';
+        const status = statusMap[employee.employee_status] || 'Unknown';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="panel/employees/employees-img/employee.png" alt="Employee" class="employee-photo"></td>
+          <td>${employee.username}</td>
+          <td>${employee.first_name} ${employee.middle_name ? employee.middle_name + ' ' : ''}${employee.last_name}</td>
+          <td>${employee.birth_date}</td>
+          <td>${gender}</td>
+          <td><span class="emp-status ${status.toLowerCase().replace(' ', '-')}">${status}</span></td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-employee"></i>
+            <i class="fa-solid fa-trash delete-employee"></i>
+          </td>
+        `;
+        employeeTbody.appendChild(row);
 
-    editEmployeeModal.style.display = "block";
-  }
+        // Attach edit functionality
+        const editIcon = row.querySelector(".edit-employee");
+        editIcon.addEventListener("click", () => {
+          openEditModal(employee, index);
+        });
 
-  // Close the edit modal when clicking the close button or outside the modal
-  closeEditModal.addEventListener("click", () => {
-    editEmployeeModal.style.display = "none";
-  });
-  window.addEventListener("click", (e) => {
-    if (e.target === editEmployeeModal) {
+        // Attach delete functionality
+        const deleteIcon = row.querySelector(".delete-employee");
+        deleteIcon.addEventListener("click", () => {
+          if (confirm("Are you sure you want to delete this employee?")) {
+            deleteEmployee(index);
+          }
+        });
+      });
+    }
+
+    // Function to open the edit modal and populate it with employee data
+    function openEditModal(employee, index) {
+      document.getElementById("editEmployeeIndex").value = index;
+      document.getElementById("editEmployeeFirstName").value = employee.first_name;
+      document.getElementById("editEmployeeMiddleName").value = employee.middle_name;
+      document.getElementById("editEmployeeLastName").value = employee.last_name;
+      document.getElementById("editEmployeeGender").value = employee.gender;
+      document.getElementById("editEmployeeBirthDate").value = employee.birth_date;
+      document.getElementById("editEmployeeUsername").value = employee.username;
+      document.getElementById("editEmployeeStatus").value = employee.employee_status;
+      document.getElementById("editEmployeeModal").style.display = "block";
+    }
+
+    // Function to delete an employee
+    function deleteEmployee(index) {
+      employeeData.splice(index, 1);
+      renderTable();
+    }
+
+    // DOM elements
+    const searchInput = document.getElementById("searchInput");
+    const filterCriteria = document.getElementById("filterCriteria");
+    const employeeTbody = document.getElementById('employeeTbody');
+    const prevPageBtn = document.getElementById("prevPage");
+    const nextPageBtn = document.getElementById("nextPage");
+    const pageNumberSpan = document.getElementById("pageNumber");
+    const btnAddEmployee = document.getElementById("btnAddEmployee");
+    const addEmployeeModal = document.getElementById("addEmployeeModal");
+    const closeAddEmployeeModal = document.getElementById("closeAddEmployeeModal");
+    const addEmployeeForm = document.getElementById("addEmployeeForm");
+    const editEmployeeModal = document.getElementById("editEmployeeModal");
+    const closeEditEmployeeModal = document.getElementById("closeEditEmployeeModal");
+    const editEmployeeForm = document.getElementById("editEmployeeForm");
+
+    // Pagination variables
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    // Render table based on filtered data and pagination
+    function renderTable() {
+      const filteredData = filterSearchData();
+      const totalRows = filteredData.length;
+      const maxPage = Math.ceil(totalRows / rowsPerPage) || 1;
+      if (currentPage > maxPage) currentPage = maxPage;
+      pageNumberSpan.textContent = currentPage.toString();
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= maxPage;
+
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const pageData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+
+      employeeTbody.innerHTML = "";
+      pageData.forEach((emp, idx) => {
+        const fullName = `${emp.first_name} ${emp.middle_name ? emp.middle_name + " " : ""}${emp.last_name}`;
+        const gender = emp.gender === 'M' ? 'Male' : emp.gender === 'F' ? 'Female' : 'Other';
+        const status = statusMap[emp.employee_status] || 'Unknown';
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><img src="panel/employees/employees-img/employee.png" alt="Employee" class="employee-photo"></td>
+          <td>${emp.username}</td>
+          <td>${fullName}</td>
+          <td>${emp.birth_date}</td>
+          <td>${gender}</td>
+          <td><span class="emp-status ${status.toLowerCase().replace(' ', '-')}">${status}</span></td>
+          <td>
+            <i class="fa-solid fa-pen-to-square edit-employee"></i>
+            <i class="fa-solid fa-trash delete-employee"></i>
+          </td>
+        `;
+        employeeTbody.appendChild(row);
+
+        // Attach edit functionality
+        const editIcon = row.querySelector(".edit-employee");
+        editIcon.addEventListener("click", () => {
+          openEditModal(emp, startIndex + idx);
+        });
+
+        // Attach delete functionality
+        const deleteIcon = row.querySelector(".delete-employee");
+        deleteIcon.addEventListener("click", () => {
+          if (confirm("Are you sure you want to delete this employee?")) {
+            employeeData.splice(startIndex + idx, 1);
+            renderTable();
+          }
+        });
+      });
+    }
+
+    // Filtering function – returns employees that match search criteria
+    function filterSearchData() {
+      const criteria = filterCriteria.value;
+      const searchVal = searchInput.value.toLowerCase().trim();
+      return employeeData.filter(emp => {
+        let textToSearch = `${emp.first_name} ${emp.middle_name} ${emp.last_name} ${emp.gender} ${emp.username}`;
+        if (criteria !== 'all') {
+          return textToSearch.toLowerCase().includes(searchVal) && emp.gender === criteria;
+        }
+        return textToSearch.toLowerCase().includes(searchVal);
+      });
+    }
+
+    // Modal handling for adding employee
+    btnAddEmployee.addEventListener("click", () => {
+      addEmployeeModal.style.display = "block";
+    });
+    closeAddEmployeeModal.addEventListener("click", () => {
+      addEmployeeModal.style.display = "none";
+    });
+    window.addEventListener("click", (e) => {
+      if (e.target === addEmployeeModal) {
+        addEmployeeModal.style.display = "none";
+      }
+    });
+
+    // Add Employee Form submit
+    addEmployeeForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const firstName = document.getElementById("employeeFirstName").value.trim();
+      const middleName = document.getElementById("employeeMiddleName").value.trim();
+      const lastName = document.getElementById("employeeLastName").value.trim();
+      const gender = document.getElementById("employeeGender").value;
+      const birthDate = document.getElementById("employeeBirthDate").value;
+      const username = document.getElementById("employeeUsername").value.trim();
+      const status = document.getElementById("employeeStatus").value;
+
+      const newEmployee = {
+        first_name: firstName,
+        middle_name: middleName,
+        last_name: lastName,
+        gender: gender,
+        birth_date: birthDate,
+        username: username,
+        employee_status: status
+      };
+      employeeData.push(newEmployee);
+      renderTable();
+      addEmployeeForm.reset();
+      addEmployeeModal.style.display = "none";
+    });
+
+    // Modal handling for editing employee
+    function openEditModal(emp, index) {
+      document.getElementById("editEmployeeIndex").value = index;
+      document.getElementById("editEmployeeFirstName").value = emp.first_name;
+      document.getElementById("editEmployeeMiddleName").value = emp.middle_name;
+      document.getElementById("editEmployeeLastName").value = emp.last_name;
+      document.getElementById("editEmployeeGender").value = emp.gender;
+      document.getElementById("editEmployeeBirthDate").value = emp.birth_date;
+      document.getElementById("editEmployeeUsername").value = emp.username;
+      document.getElementById("editEmployeeStatus").value = emp.employee_status;
+      editEmployeeModal.style.display = "block";
+    }
+
+    closeEditEmployeeModal.addEventListener("click", () => {
       editEmployeeModal.style.display = "none";
-    }
-  });
+    });
+    window.addEventListener("click", (e) => {
+      if (e.target === editEmployeeModal) {
+        editEmployeeModal.style.display = "none";
+      }
+    });
 
-  // Handle form submission for editing employee details
-  if (editEmployeeForm) {
     editEmployeeForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      if (!currentEditingEmployee) return;
-
-      // Update the employee row with new data from the modal
-      currentEditingEmployee.cells[1].textContent = document.getElementById("editEmpName").value;
-      currentEditingEmployee.cells[2].textContent = document.getElementById("editEmpGender").value;
-      
-      // Update status text and reapply the corresponding class
-      const newStatus = document.getElementById("editEmpStatus").value;
-      let newStatusClass = "";
-      switch (newStatus.toLowerCase()) {
-        case "active":
-          newStatusClass = "active";
-          break;
-        case "probationary":
-          newStatusClass = "probationary";
-          break;
-        case "part-time":
-          newStatusClass = "part-time";
-          break;
-        case "full-time":
-          newStatusClass = "full-time";
-          break;
-        case "terminated":
-          newStatusClass = "terminated";
-          break;
-        case "resigned":
-          newStatusClass = "resigned";
-          break;
-        case "retired":
-          newStatusClass = "retired";
-          break;
-        case "on leave":
-          newStatusClass = "on-leave";
-          break;
-        default:
-          newStatusClass = "";
-      }
-      const statusSpan = currentEditingEmployee.cells[3].querySelector(".emp-status");
-      statusSpan.textContent = newStatus;
-      statusSpan.className = `emp-status ${newStatusClass}`;
-
-      currentEditingEmployee.cells[4].textContent = document.getElementById("editEmpContact").value;
-
-      // If a new image is selected, update the employee photo
-      if (editEmpImageInput.files && editEmpImageInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          currentEditingEmployee.cells[0].querySelector(".employee-photo").src = event.target.result;
-        };
-        reader.readAsDataURL(editEmpImageInput.files[0]);
-      }
-
-      editEmployeeModal.style.display = "none";
+      const index = document.getElementById("editEmployeeIndex").value;
+      employeeData[index].first_name = document.getElementById("editEmployeeFirstName").value.trim();
+      employeeData[index].middle_name = document.getElementById("editEmployeeMiddleName").value.trim();
+      employeeData[index].last_name = document.getElementById("editEmployeeLastName").value.trim();
+      employeeData[index].gender = document.getElementById("editEmployeeGender").value;
+      employeeData[index].birth_date = document.getElementById("editEmployeeBirthDate").value;
+      employeeData[index].username = document.getElementById("editEmployeeUsername").value.trim();
+      employeeData[index].employee_status = document.getElementById("editEmployeeStatus").value;
+      renderTable();
       editEmployeeForm.reset();
+      editEmployeeModal.style.display = "none";
     });
-  }
 
-  // Handle image upload preview in the edit modal (optional)
-  if (editEmpImageInput) {
-    editEmpImageInput.addEventListener("change", function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          // Optional: update an image preview element if desired.
-        };
-        reader.readAsDataURL(file);
+    // Pagination controls
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
       }
     });
+    nextPageBtn.addEventListener("click", () => {
+      const totalRows = filterSearchData().length;
+      const maxPage = Math.ceil(totalRows / rowsPerPage);
+      if (currentPage < maxPage) {
+        currentPage++;
+        renderTable();
+      }
+    });
+
+    // Attach search & filter events
+    searchInput.addEventListener("input", () => {
+      currentPage = 1;
+      renderTable();
+    });
+    filterCriteria.addEventListener("change", () => {
+      currentPage = 1;
+      renderTable();
+    });
+
+    // Initial render
+    renderTable();
   }
 
-  // Load statuses first, then load employees
-  loadStatuses().then(loadEmployees);
-}
-
-window.initEmployees = initEmployees;
+  // Expose the initialization function so it can be called from dashboard.js
+  window.initEmployeeList = initEmployeeList;
+});

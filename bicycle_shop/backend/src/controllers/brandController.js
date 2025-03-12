@@ -1,8 +1,12 @@
-const Brand = require('../models/brandModel');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
 exports.getAllBrands = async (req, res) => {
     try {
-        const brands = await Brand.findAll();
+        const brands = await sequelize.query(
+            `SELECT * FROM brand`,
+            { type: QueryTypes.SELECT }
+        );
         res.json(brands);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -11,9 +15,16 @@ exports.getAllBrands = async (req, res) => {
 
 exports.getBrandById = async (req, res) => {
     try {
-        const brand = await Brand.findByPk(req.params.id);
-        if (brand) {
-            res.json(brand);
+        const brand = await sequelize.query(
+            `SELECT * FROM brand WHERE brand_id = :brand_id`,
+            {
+                type: QueryTypes.SELECT,
+                replacements: { brand_id: req.params.id }
+            }
+        );
+
+        if (brand.length > 0) {
+            res.json(brand[0]);
         } else {
             res.status(404).json({ message: 'Brand not found' });
         }
@@ -24,8 +35,19 @@ exports.getBrandById = async (req, res) => {
 
 exports.createBrand = async (req, res) => {
     try {
-        const newBrand = await Brand.create(req.body);
-        res.status(201).json(newBrand);
+        const [result] = await sequelize.query(
+            `INSERT INTO brand (brand_name, origin)
+             VALUES (:brand_name, :origin)`,
+            {
+                type: QueryTypes.INSERT,
+                replacements: {
+                    brand_name: req.body.brand_name,
+                    origin: req.body.origin || null
+                }
+            }
+        );
+
+        res.status(201).json({ message: 'Brand created successfully', brand_id: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,12 +55,28 @@ exports.createBrand = async (req, res) => {
 
 exports.updateBrand = async (req, res) => {
     try {
-        const [updated] = await Brand.update(req.body, {
-            where: { brand_id: req.params.id }
-        });
+        const [updated] = await sequelize.query(
+            `UPDATE brand SET brand_name = :brand_name, origin = :origin
+             WHERE brand_id = :brand_id`,
+            {
+                type: QueryTypes.UPDATE,
+                replacements: {
+                    brand_name: req.body.brand_name,
+                    origin: req.body.origin || null,
+                    brand_id: req.params.id
+                }
+            }
+        );
+
         if (updated) {
-            const updatedBrand = await Brand.findByPk(req.params.id);
-            res.json(updatedBrand);
+            const updatedBrand = await sequelize.query(
+                `SELECT * FROM brand WHERE brand_id = :brand_id`,
+                {
+                    type: QueryTypes.SELECT,
+                    replacements: { brand_id: req.params.id }
+                }
+            );
+            res.json(updatedBrand[0]);
         } else {
             res.status(404).json({ message: 'Brand not found' });
         }
@@ -49,9 +87,14 @@ exports.updateBrand = async (req, res) => {
 
 exports.deleteBrand = async (req, res) => {
     try {
-        const deleted = await Brand.destroy({
-            where: { brand_id: req.params.id }
-        });
+        const deleted = await sequelize.query(
+            `DELETE FROM brand WHERE brand_id = :brand_id`,
+            {
+                type: QueryTypes.DELETE,
+                replacements: { brand_id: req.params.id }
+            }
+        );
+
         if (deleted) {
             res.status(204).json();
         } else {

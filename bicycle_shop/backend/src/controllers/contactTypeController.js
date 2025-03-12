@@ -1,8 +1,12 @@
-const ContactType = require('../models/contactTypeModel');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
 exports.getAllContactTypes = async (req, res) => {
     try {
-        const contactTypes = await ContactType.findAll();
+        const contactTypes = await sequelize.query(
+            `SELECT * FROM contact_type`,
+            { type: QueryTypes.SELECT }
+        );
         res.json(contactTypes);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -11,9 +15,16 @@ exports.getAllContactTypes = async (req, res) => {
 
 exports.getContactTypeByCode = async (req, res) => {
     try {
-        const contactType = await ContactType.findByPk(req.params.contact_type_code);
-        if (contactType) {
-            res.json(contactType);
+        const contactType = await sequelize.query(
+            `SELECT * FROM contact_type WHERE contact_type_code = :contact_type_code`,
+            {
+                type: QueryTypes.SELECT,
+                replacements: { contact_type_code: req.params.contact_type_code }
+            }
+        );
+
+        if (contactType.length > 0) {
+            res.json(contactType[0]);
         } else {
             res.status(404).json({ message: 'Contact type not found' });
         }
@@ -24,8 +35,19 @@ exports.getContactTypeByCode = async (req, res) => {
 
 exports.createContactType = async (req, res) => {
     try {
-        const newContactType = await ContactType.create(req.body);
-        res.status(201).json(newContactType);
+        const [result] = await sequelize.query(
+            `INSERT INTO contact_type (contact_type_code, description)
+             VALUES (:contact_type_code, :description)`,
+            {
+                type: QueryTypes.INSERT,
+                replacements: {
+                    contact_type_code: req.body.contact_type_code,
+                    description: req.body.description
+                }
+            }
+        );
+
+        res.status(201).json({ message: 'Contact type created successfully', contact_type_code: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,12 +55,27 @@ exports.createContactType = async (req, res) => {
 
 exports.updateContactType = async (req, res) => {
     try {
-        const [updated] = await ContactType.update(req.body, {
-            where: { contact_type_code: req.params.contact_type_code }
-        });
+        const [updated] = await sequelize.query(
+            `UPDATE contact_type SET description = :description
+             WHERE contact_type_code = :contact_type_code`,
+            {
+                type: QueryTypes.UPDATE,
+                replacements: {
+                    description: req.body.description,
+                    contact_type_code: req.params.contact_type_code
+                }
+            }
+        );
+
         if (updated) {
-            const updatedContactType = await ContactType.findByPk(req.params.contact_type_code);
-            res.json(updatedContactType);
+            const updatedContactType = await sequelize.query(
+                `SELECT * FROM contact_type WHERE contact_type_code = :contact_type_code`,
+                {
+                    type: QueryTypes.SELECT,
+                    replacements: { contact_type_code: req.params.contact_type_code }
+                }
+            );
+            res.json(updatedContactType[0]);
         } else {
             res.status(404).json({ message: 'Contact type not found' });
         }
@@ -49,9 +86,14 @@ exports.updateContactType = async (req, res) => {
 
 exports.deleteContactType = async (req, res) => {
     try {
-        const deleted = await ContactType.destroy({
-            where: { contact_type_code: req.params.contact_type_code }
-        });
+        const deleted = await sequelize.query(
+            `DELETE FROM contact_type WHERE contact_type_code = :contact_type_code`,
+            {
+                type: QueryTypes.DELETE,
+                replacements: { contact_type_code: req.params.contact_type_code }
+            }
+        );
+
         if (deleted) {
             res.status(204).json();
         } else {

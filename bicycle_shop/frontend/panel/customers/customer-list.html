@@ -1,166 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Customer List | Jolens Bicycle Supply</title>
+<div class="customer-list-container">
+  <h1>Customer List</h1>
   
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Search & Filter Container -->
+  <div class="search-filter-container">
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search customers..." />
+    </div>
+    <div class="filter-dropdown">
+      <select id="filterCriteria">
+        <option value="all">All</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Other</option>
+      </select>
+    </div>
+    <button class="btn-add-customer" id="btnAddCustomer">
+      <i class="fa-solid fa-plus"></i> Add Customer
+    </button>
+  </div>
+  
+  <!-- Customer Table -->
+  <table class="customer-table">
+    <thead>
+      <tr>
+        <th>Customer ID</th>
+        <th>Full Name</th>
+        <th>Gender</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="customerTbody">
+      <!-- Rows will be dynamically added here by JavaScript -->
+    </tbody>
+  </table>
+  
+  <!-- Table Controls: Pagination & Add Customer Button (placed on opposite sides) -->
+  <div class="table-controls">
+    <div class="pagination">
+      <button id="prevPage" disabled>« Prev</button>
+      <span id="pageNumber">1</span>
+      <button id="nextPage">Next »</button>
+    </div>
+  </div>
+</div>
 
-</head>
-<body>
-  <div class="customer-list-container">
-    <h1>Customer List</h1>
-    
-    <!-- Search & Filter Container -->
-    <div class="search-filter-container">
-      <div class="search-bar">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Search customers..." />
+<!-- Add Customer Modal -->
+<div class="modal" id="addCustomerModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeAddCustomerModal">&times;</span>
+    <h2>Add Customer</h2>
+    <form id="addCustomerForm">
+      <div class="form-group">
+        <label for="customerFirstName">First Name</label>
+        <input type="text" id="customerFirstName" placeholder="First Name" required />
       </div>
-      <div class="filter-dropdown">
-        <select id="filterCriteria">
-          <option value="all">All</option>
-          <option value="name">Name</option>
-          <option value="gender">Gender</option>
+      <div class="form-group">
+        <label for="customerMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="customerMiddleName" placeholder="Middle Name" />
+      </div>
+      <div class="form-group">
+        <label for="customerLastName">Last Name</label>
+        <input type="text" id="customerLastName" placeholder="Last Name" required />
+      </div>
+      <div class="form-group">
+        <label for="customerGender">Gender</label>
+        <select id="customerGender" required>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
         </select>
       </div>
-      <button class="btn-add-customer" id="btnAddCustomer">
-        <i class="fa-solid fa-plus"></i> Add Customer
-      </button>
-    </div>
-    
-    <!-- Customer Table -->
-    <table class="customer-table">
-      <thead>
-        <tr>
-          <th>Customer ID</th>
-          <th>Full Name</th>
-          <th>Gender</th>
-          <th>Primary Contact</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="customerTbody">
-        <!-- Sample Data -->
-        <tr>
-          <td>101</td>
-          <td>John Doe</td>
-          <td>M</td>
-          <td>+123456789</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-customer"></i>
-            <i class="fa-solid fa-trash delete-customer"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>102</td>
-          <td>Jane A. Smith</td>
-          <td>F</td>
-          <td>jane.smith@example.com</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-customer"></i>
-            <i class="fa-solid fa-trash delete-customer"></i>
-          </td>
-        </tr>
-        <tr>
-          <td>103</td>
-          <td>Michael B. Johnson</td>
-          <td>M</td>
-          <td>+1987654321</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-customer"></i>
-            <i class="fa-solid fa-trash delete-customer"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <!-- Table Controls: Pagination & Add Customer Button (placed on opposite sides) -->
-    <div class="table-controls">
-      <div class="pagination">
-        <button id="prevPage" disabled>« Prev</button>
-        <span id="pageNumber">1</span>
-        <button id="nextPage">Next »</button>
+      <div class="form-group">
+        <label for="customerContact">Primary Contact</label>
+        <input type="text" id="customerContact" placeholder="Phone or Email" required />
       </div>
-    </div>
+      <button type="submit" class="btn-submit">Add Customer</button>
+    </form>
   </div>
-  
-  <!-- Add Customer Modal -->
-  <div class="modal" id="addCustomerModal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeAddCustomerModal">&times;</span>
-      <h2>Add Customer</h2>
-      <form id="addCustomerForm">
-        <div class="form-group">
-          <label for="customerFirstName">First Name</label>
-          <input type="text" id="customerFirstName" placeholder="First Name" required />
-        </div>
-        <div class="form-group">
-          <label for="customerMiddleName">Middle Name (Optional)</label>
-          <input type="text" id="customerMiddleName" placeholder="Middle Name" />
-        </div>
-        <div class="form-group">
-          <label for="customerLastName">Last Name</label>
-          <input type="text" id="customerLastName" placeholder="Last Name" required />
-        </div>
-        <div class="form-group">
-          <label for="customerGender">Gender</label>
-          <select id="customerGender" required>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="customerContact">Primary Contact</label>
-          <input type="text" id="customerContact" placeholder="Phone or Email" required />
-        </div>
-        <button type="submit" class="btn-submit">Add Customer</button>
-      </form>
-    </div>
+</div>
+
+<!-- Edit Customer Modal -->
+<div class="modal" id="editCustomerModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeEditCustomerModal">&times;</span>
+    <h2>Edit Customer</h2>
+    <form id="editCustomerForm">
+      <input type="hidden" id="editCustomerIndex" />
+      <div class="form-group">
+        <label for="editCustomerFirstName">First Name</label>
+        <input type="text" id="editCustomerFirstName" required />
+      </div>
+      <div class="form-group">
+        <label for="editCustomerMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="editCustomerMiddleName" />
+      </div>
+      <div class="form-group">
+        <label for="editCustomerLastName">Last Name</label>
+        <input type="text" id="editCustomerLastName" required />
+      </div>
+      <div class="form-group">
+        <label for="editCustomerGender">Gender</label>
+        <select id="editCustomerGender" required>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editCustomerContact">Primary Contact</label>
+        <input type="text" id="editCustomerContact" required />
+      </div>
+      <button type="submit" class="btn-submit">Save Changes</button>
+    </form>
   </div>
-  
-  <!-- Edit Customer Modal -->
-  <div class="modal" id="editCustomerModal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeEditCustomerModal">&times;</span>
-      <h2>Edit Customer</h2>
-      <form id="editCustomerForm">
-        <input type="hidden" id="editCustomerIndex" />
-        <div class="form-group">
-          <label for="editCustomerFirstName">First Name</label>
-          <input type="text" id="editCustomerFirstName" required />
-        </div>
-        <div class="form-group">
-          <label for="editCustomerMiddleName">Middle Name (Optional)</label>
-          <input type="text" id="editCustomerMiddleName" />
-        </div>
-        <div class="form-group">
-          <label for="editCustomerLastName">Last Name</label>
-          <input type="text" id="editCustomerLastName" required />
-        </div>
-        <div class="form-group">
-          <label for="editCustomerGender">Gender</label>
-          <select id="editCustomerGender" required>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="editCustomerContact">Primary Contact</label>
-          <input type="text" id="editCustomerContact" required />
-        </div>
-        <button type="submit" class="btn-submit">Save Changes</button>
-      </form>
-    </div>
-  </div>
-  
-  <!-- Customer List JS -->
-  <script src="customer-list.js"></script>
-</body>
-</html>
+</div>

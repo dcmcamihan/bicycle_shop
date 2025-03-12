@@ -69,8 +69,8 @@ function loadPage(pageUrl) {
       if (pageUrl.includes('stockout.html') && typeof initStockouts === 'function') {
         initStockouts();
       }
-      if (pageUrl.includes('employees.html') && typeof initEmployees === 'function') {
-        initEmployees();
+      if (pageUrl.includes('employees.html') && typeof initEmployeeList === 'function') {
+        initEmployeeList();
       }
       if (pageUrl.includes('attendance.html') && typeof initAttendance === 'function') {
         initAttendance();

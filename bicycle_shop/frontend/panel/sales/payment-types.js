@@ -21,12 +21,22 @@ function initPaymentTypes() {
 
   let editPaymentIndex = null;
 
-  // Sample data (replace with actual data fetching logic)
-  let paymentTypesData = [
-    { id: "PT001", method: "Cash", description: "Payment in cash" },
-    { id: "PT002", method: "Card", description: "Credit/Debit Card Payment" },
-    { id: "PT003", method: "Online", description: "Payment via online gateway" },
-  ];
+  // Replace static data with an empty array
+  let paymentTypesData = [];
+
+  // Fetch payment types data from the API
+  function fetchPaymentTypes() {
+    fetch("http://localhost:3000/api/payment-methods") // Replace with your API endpoint
+      .then((response) => response.json())
+      .then((data) => {
+        paymentTypesData = data.map((payment) => ({
+          method: payment.payment_method_code, // Use the code as the method name
+          description: payment.description,
+        }));
+        renderTable();
+      })
+      .catch((error) => console.error("Error fetching payment types:", error));
+  }
 
   // --- Modal Event Listeners ---
   if (btnAddPayment) {
@@ -58,20 +68,50 @@ function initPaymentTypes() {
       if (editPaymentIndex === null) {
         // Add new payment type
         const newPaymentType = {
-          id: "PT" + String(paymentTypesData.length + 1).padStart(3, "0"),
-          method,
+          payment_method_code: method,
           description,
         };
-        paymentTypesData.push(newPaymentType);
+
+        // Send POST request to create a new payment method
+        fetch("http://localhost:3000/api/payment-methods", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPaymentType),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            paymentTypesData.push({
+              method: data.payment_method_code,
+              description: data.description,
+            });
+            paymentModal.style.display = "none";
+            paymentForm.reset();
+            renderTable();
+          })
+          .catch((error) => console.error("Error adding payment type:", error));
       } else {
         // Edit existing payment type
-        paymentTypesData[editPaymentIndex].method = method;
-        paymentTypesData[editPaymentIndex].description = description;
-      }
+        const updatedPaymentType = {
+          payment_method_code: paymentTypesData[editPaymentIndex].method,
+          description,
+        };
 
-      paymentModal.style.display = "none";
-      paymentForm.reset();
-      renderTable();
+        // Send PUT request to update the payment method
+        fetch(`http://localhost:3000/api/payment-methods/${paymentTypesData[editPaymentIndex].method}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedPaymentType),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            paymentTypesData[editPaymentIndex].method = method;
+            paymentTypesData[editPaymentIndex].description = description;
+            paymentModal.style.display = "none";
+            paymentForm.reset();
+            renderTable();
+          })
+          .catch((error) => console.error("Error updating payment type:", error));
+      }
     });
   }
 
@@ -126,7 +166,6 @@ function initPaymentTypes() {
     pageData.forEach((payment, idx) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${payment.id}</td>
         <td>${payment.method}</td>
         <td>${payment.description}</td>
         <td>
@@ -147,8 +186,14 @@ function initPaymentTypes() {
       const deleteIcon = row.querySelector(".delete-payment");
       deleteIcon.addEventListener("click", () => {
         if (confirm("Are you sure you want to delete this payment type?")) {
-          paymentTypesData.splice(startIndex + idx, 1);
-          renderTable();
+          fetch(`http://localhost:3000/api/payment-methods/${payment.method}`, {
+            method: "DELETE",
+          })
+            .then(() => {
+              paymentTypesData.splice(startIndex + idx, 1);
+              renderTable();
+            })
+            .catch((error) => console.error("Error deleting payment type:", error));
         }
       });
     });
@@ -157,8 +202,8 @@ function initPaymentTypes() {
   // --- Filter & Search Function ---
   function filterSearchData() {
     const searchVal = searchInput.value.toLowerCase().trim();
-    return paymentTypesData.filter(payment => {
-      const textToSearch = payment.id + payment.method + payment.description;
+    return paymentTypesData.filter((payment) => {
+      const textToSearch = payment.method + payment.description;
       return textToSearch.toLowerCase().includes(searchVal);
     });
   }
@@ -172,8 +217,8 @@ function initPaymentTypes() {
     paymentModal.style.display = "block";
   }
 
-  // Initial render
-  renderTable();
+  // Initial fetch of payment types data
+  fetchPaymentTypes();
 }
 
 // Expose the initialization function so it can be called externally

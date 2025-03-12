@@ -1,8 +1,12 @@
-const Customer = require('../models/customerModel');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
 exports.getAllCustomers = async (req, res) => {
     try {
-        const customers = await Customer.findAll();
+        const customers = await sequelize.query(
+            `SELECT * FROM customer`,
+            { type: QueryTypes.SELECT }
+        );
         res.json(customers);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -11,9 +15,16 @@ exports.getAllCustomers = async (req, res) => {
 
 exports.getCustomerById = async (req, res) => {
     try {
-        const customer = await Customer.findByPk(req.params.id);
-        if (customer) {
-            res.json(customer);
+        const customer = await sequelize.query(
+            `SELECT * FROM customer WHERE customer_id = :id`,
+            {
+                type: QueryTypes.SELECT,
+                replacements: { id: req.params.id }
+            }
+        );
+
+        if (customer.length > 0) {
+            res.json(customer[0]);
         } else {
             res.status(404).json({ message: 'Customer not found' });
         }
@@ -24,8 +35,21 @@ exports.getCustomerById = async (req, res) => {
 
 exports.createCustomer = async (req, res) => {
     try {
-        const newCustomer = await Customer.create(req.body);
-        res.status(201).json(newCustomer);
+        const [result] = await sequelize.query(
+            `INSERT INTO customer (first_name, last_name, middle_name, gender)
+             VALUES (:first_name, :last_name, :middle_name, :gender)`,
+            {
+                type: QueryTypes.INSERT,
+                replacements: {
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    middle_name: req.body.middle_name || null,
+                    gender: req.body.gender || null
+                }
+            }
+        );
+
+        res.status(201).json({ message: 'Customer created successfully', customer_id: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,12 +57,34 @@ exports.createCustomer = async (req, res) => {
 
 exports.updateCustomer = async (req, res) => {
     try {
-        const [updated] = await Customer.update(req.body, {
-            where: { customer_id: req.params.id }
-        });
+        const [updated] = await sequelize.query(
+            `UPDATE customer SET 
+                first_name = :first_name,
+                last_name = :last_name,
+                middle_name = :middle_name,
+                gender = :gender
+             WHERE customer_id = :id`,
+            {
+                type: QueryTypes.UPDATE,
+                replacements: {
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    middle_name: req.body.middle_name || null,
+                    gender: req.body.gender || null,
+                    id: req.params.id
+                }
+            }
+        );
+
         if (updated) {
-            const updatedCustomer = await Customer.findByPk(req.params.id);
-            res.json(updatedCustomer);
+            const updatedCustomer = await sequelize.query(
+                `SELECT * FROM customer WHERE customer_id = :id`,
+                {
+                    type: QueryTypes.SELECT,
+                    replacements: { id: req.params.id }
+                }
+            );
+            res.json(updatedCustomer[0]);
         } else {
             res.status(404).json({ message: 'Customer not found' });
         }
@@ -49,9 +95,14 @@ exports.updateCustomer = async (req, res) => {
 
 exports.deleteCustomer = async (req, res) => {
     try {
-        const deleted = await Customer.destroy({
-            where: { customer_id: req.params.id }
-        });
+        const deleted = await sequelize.query(
+            `DELETE FROM customer WHERE customer_id = :id`,
+            {
+                type: QueryTypes.DELETE,
+                replacements: { id: req.params.id }
+            }
+        );
+
         if (deleted) {
             res.status(204).json();
         } else {

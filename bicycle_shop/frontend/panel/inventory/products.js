@@ -1,10 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Define an initialization function for the products page
   function initProducts() {
-    // Pagination variables
-    let currentPage = 1;
-    const rowsPerPage = 10;
-    let allProductRows = [];
     // Fetch categories and brands data from the API
     Promise.all([
       fetch('http://127.0.0.1:3000/api/categories').then(response => response.json()),
@@ -46,22 +42,60 @@ document.addEventListener('DOMContentLoaded', () => {
           const tableBody = document.getElementById('productTableBody');
           tableBody.innerHTML = ''; // Clear existing rows
 
-          // Fetch quantity on hand for each product and add rows to the table
-          products.forEach(product => {
-            fetch(`http://127.0.0.1:3000/api/products/${product.product_id}/quantity-on-hand`)
-              .then(response => response.json())
-              .then(quantityOnHand => {
-                const status = quantityOnHand > 0 ? 'In Stock' : 'Out of Stock';
-                addNewProductRow(
-                  'panel/inventory/inventory-img/generic-product.png', // Placeholder image
-                  product.product_name,
-                  categoryMap[product.category_code] || product.category_code, // Get category name from map
-                  brandMap[product.brand_id] || product.brand_id, // Get brand name from map
-                  product.price,
-                  status,
-                  quantityOnHand < 0 ? 0 : quantityOnHand // Ensure quantity on hand is non-negative
-                );
-              });
+          // Pagination variables
+          let currentPage = 1;
+          const rowsPerPage = 10;
+
+          // Function to render the table based on the current page
+          function renderTable() {
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const pageData = products.slice(startIndex, startIndex + rowsPerPage);
+
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            pageData.forEach(product => {
+              fetch(`http://127.0.0.1:3000/api/products/${product.product_id}/quantity-on-hand`)
+                .then(response => response.json())
+                .then(quantityOnHand => {
+                  const status = quantityOnHand > 0 ? 'In Stock' : 'Out of Stock';
+                  addNewProductRow(
+                    'panel/inventory/inventory-img/generic-product.png', // Placeholder image
+                    product.product_name,
+                    categoryMap[product.category_code] || product.category_code, // Get category name from map
+                    brandMap[product.brand_id] || product.brand_id, // Get brand name from map
+                    product.price,
+                    status,
+                    quantityOnHand < 0 ? 0 : quantityOnHand // Ensure quantity on hand is non-negative
+                  );
+                });
+            });
+
+            // Update pagination controls
+            const totalRows = products.length;
+            const maxPage = Math.ceil(totalRows / rowsPerPage) || 1;
+            document.getElementById('pageNumber').textContent = currentPage.toString();
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= maxPage;
+          }
+
+          // Initial render
+          renderTable();
+
+          // Pagination controls
+          document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+              currentPage--;
+              renderTable();
+            }
+          });
+
+          document.getElementById('nextPage').addEventListener('click', () => {
+            const totalRows = products.length;
+            const maxPage = Math.ceil(totalRows / rowsPerPage);
+            if (currentPage < maxPage) {
+              currentPage++;
+              renderTable();
+            }
           });
 
           // Filter products based on selected brand, category, and search text
@@ -69,33 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedBrand = filterBrand.value;
             const selectedCategory = filterCategory.value;
             const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const tableBody = document.getElementById('productTableBody');
-            tableBody.innerHTML = ''; // Clear existing rows
+            const filteredProducts = products.filter(product => 
+              (selectedBrand === 'all' || product.brand_id == selectedBrand) &&
+              (selectedCategory === 'all' || product.category_code == selectedCategory) &&
+              product.product_name.toLowerCase().includes(searchText)
+            );
 
-            // *** Pagination-related change: reset the rows array and page counter ***
-            allProductRows = [];
+            // Update products array with filtered data and reset pagination
+            products = filteredProducts;
             currentPage = 1;
-            
-            products
-              .filter(product => (selectedBrand === 'all' || product.brand_id == selectedBrand) &&
-                                 (selectedCategory === 'all' || product.category_code == selectedCategory) &&
-                                 product.product_name.toLowerCase().includes(searchText))
-              .forEach(product => {
-                fetch(`http://127.0.0.1:3000/api/products/${product.product_id}/quantity-on-hand`)
-                  .then(response => response.json())
-                  .then(quantityOnHand => {
-                    const status = quantityOnHand > 0 ? 'In Stock' : 'Out of Stock';
-                    addNewProductRow(
-                      'panel/inventory/inventory-img/generic-product.png', // Placeholder image
-                      product.product_name,
-                      categoryMap[product.category_code] || product.category_code, // Get category name from map
-                      brandMap[product.brand_id] || product.brand_id, // Get brand name from map
-                      product.price,
-                      status,
-                      quantityOnHand < 0 ? 0 : quantityOnHand // Ensure quantity on hand is non-negative
-                    );
-                  });
-              });
+            renderTable();
           };
 
           filterBrand.addEventListener('change', filterProducts);
@@ -140,6 +157,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (addProductBtn) {
       addProductBtn.addEventListener("click", () => {
         addProductModal.style.display = "block";
+
+        // Fetch categories and brands data from the API for the modal
+        Promise.all([
+          fetch('http://127.0.0.1:3000/api/categories').then(response => response.json()),
+          fetch('http://127.0.0.1:3000/api/brands').then(response => response.json())
+        ])
+        .then(([categories, brands]) => {
+          const addProductCategory = document.getElementById('addProductCategory');
+          const addProductBrand = document.getElementById('addProductBrand');
+
+          // Clear existing options
+          addProductCategory.innerHTML = '';
+          addProductBrand.innerHTML = '';
+
+          // Populate category dropdown
+          categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.category_code;
+            option.textContent = category.category_name;
+            addProductCategory.appendChild(option);
+          });
+
+          // Populate brand dropdown
+          brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand.brand_id;
+            option.textContent = brand.brand_name;
+            addProductBrand.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error fetching data:', error));
       });
     }
     if (closeAddModal) {
@@ -172,28 +220,67 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Handle Add Product Form Submission
     const addProductForm = document.getElementById("addProductForm");
     if (addProductForm) {
-      addProductForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("addProductName").value;
-        const brand = document.getElementById("addProductBrand").value;
-        const category = document.getElementById("addProductCategory").value;
-        const price = document.getElementById("addProductPrice").value;
+        addProductForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-        let imageSrc = "panel/inventory/inventory-img/generic-product.png";
-        if (addProductImageInput.files && addProductImageInput.files[0]) {
-          imageSrc = URL.createObjectURL(addProductImageInput.files[0]);
-        }
+            // Get form data
+            const name = document.getElementById("addProductName").value;
+            const brand = document.getElementById("addProductBrand").value;
+            const category = document.getElementById("addProductCategory").value;
+            const price = document.getElementById("addProductPrice").value;
 
-        addNewProductRow(imageSrc, name, category, brand, price, 'In Stock');
-        addProductForm.reset();
-        addProductModal.style.display = "none";
-      });
+            // Prepare the product data
+            const productData = {
+                product_name: name,
+                brand_id: parseInt(brand),
+                category_code: category,
+                price: parseFloat(price)
+            };
+
+            try {
+                // Send a POST request to the backend API
+                const response = await fetch('http://127.0.0.1:3000/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(productData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save the product');
+                }
+
+                // Parse the response
+                const newProduct = await response.json();
+
+                // Add the new product to the table
+                addNewProductRow(
+                    'panel/inventory/inventory-img/generic-product.png', // Placeholder image
+                    newProduct.product_name,
+                    newProduct.category_code,
+                    newProduct.brand_id,
+                    newProduct.price,
+                    'In Stock' // Default status
+                );
+
+                // Reset the form and close the modal
+                addProductForm.reset();
+                addProductModal.style.display = "none";
+
+                // Optionally, refresh the product list
+                initProducts();
+            } catch (error) {
+                console.error('Error saving product:', error);
+                alert('Failed to save the product. Please try again.');
+            }
+        });
     }
 
     // 6. Function to add a new product row to the table
     function addNewProductRow(imgSrc, name, category, brand, price, status, quantityInStock = 0) {
-      // Get reference to the table body (do not append directly anymore)
       const tableBody = document.querySelector(".collapsible-table tbody");
+      if (!tableBody) return;
 
       const parentRow = document.createElement("tr");
       parentRow.classList.add("parent-row");
@@ -208,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${category}</td>
         <td>${brand}</td>
         <td><span class="status ${status === 'In Stock' ? 'in-stock' : 'out-stock'}">${status}</span></td>
-        <td>$${price}</td>
+        <td>P${price}</td>
         <td>${quantityInStock}</td>
         <td>
           <i class="fa-solid fa-pen-to-square edit-product"></i>
@@ -227,6 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </td>
       `;
 
+      tableBody.appendChild(parentRow);
+      tableBody.appendChild(childRow);
+
       // Attach toggle functionality for the new row
       const toggleBtn = parentRow.querySelector(".toggle-btn");
       toggleBtn.addEventListener("click", () => {
@@ -242,32 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Attach delete functionality for the new row
       attachDeleteFunctionality(parentRow);
-
-      // *** Pagination-related change: ***
-      // Instead of appending the rows directly, push them into the allProductRows array...
-      allProductRows.push({ parentRow, childRow });
-      // ...and then render the current page.
-      renderPage();
     }
-
-    function renderPage() {
-      const tableBody = document.querySelector(".collapsible-table tbody");
-      tableBody.innerHTML = ""; // Clear existing rows
-    
-      const start = (currentPage - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-      const rowsToShow = allProductRows.slice(start, end);
-    
-      rowsToShow.forEach(rowObj => {
-        tableBody.appendChild(rowObj.parentRow);
-        tableBody.appendChild(rowObj.childRow);
-      });
-    
-      // Update pagination controls
-      document.getElementById('pageNumber').textContent = currentPage;
-      document.getElementById('prevPage').disabled = currentPage === 1;
-      document.getElementById('nextPage').disabled = end >= allProductRows.length;
-    }    
 
     // 7. Attach delete functionality to a product row (for new rows)
     function attachDeleteFunctionality(parentRow) {
@@ -302,6 +367,41 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById("editProductCategory").value = productCategory;
       document.getElementById("editProductBrand").value = productBrand;
       document.getElementById("editProductPrice").value = productPrice.replace("$", "");
+
+      // Fetch categories and brands data from the API for the modal
+      Promise.all([
+        fetch('http://127.0.0.1:3000/api/categories').then(response => response.json()),
+        fetch('http://127.0.0.1:3000/api/brands').then(response => response.json())
+      ])
+      .then(([categories, brands]) => {
+        const editProductCategory = document.getElementById('editProductCategory');
+        const editProductBrand = document.getElementById('editProductBrand');
+
+        // Clear existing options
+        editProductCategory.innerHTML = '';
+        editProductBrand.innerHTML = '';
+
+        // Populate category dropdown
+        categories.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category.category_code;
+          option.textContent = category.category_name;
+          editProductCategory.appendChild(option);
+        });
+
+        // Populate brand dropdown
+        brands.forEach(brand => {
+          const option = document.createElement('option');
+          option.value = brand.brand_id;
+          option.textContent = brand.brand_name;
+          editProductBrand.appendChild(option);
+        });
+
+        // Set the current values
+        editProductCategory.value = productCategory;
+        editProductBrand.value = productBrand;
+      })
+      .catch(error => console.error('Error fetching data:', error));
 
       editModal.style.display = "block";
     }
@@ -342,21 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.style.display = "none";
       }
     });
-
-    document.getElementById('prevPage').addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-      }
-    });
-    
-    document.getElementById('nextPage').addEventListener('click', () => {
-      if (currentPage * rowsPerPage < allProductRows.length) {
-        currentPage++;
-        renderPage();
-      }
-    });
-    
   }
 
   // Expose the initialization function so it can be called from dashboard.js

@@ -1,8 +1,12 @@
-const Supplier = require('../models/supplierModel');
+const { QueryTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
 exports.getAllSuppliers = async (req, res) => {
     try {
-        const suppliers = await Supplier.findAll();
+        const suppliers = await sequelize.query(
+            `SELECT * FROM supplier`,
+            { type: QueryTypes.SELECT }
+        );
         res.json(suppliers);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -11,9 +15,16 @@ exports.getAllSuppliers = async (req, res) => {
 
 exports.getSupplierById = async (req, res) => {
     try {
-        const supplier = await Supplier.findByPk(req.params.id);
-        if (supplier) {
-            res.json(supplier);
+        const supplier = await sequelize.query(
+            `SELECT * FROM supplier WHERE supplier_id = :supplier_id`,
+            {
+                type: QueryTypes.SELECT,
+                replacements: { supplier_id: req.params.id }
+            }
+        );
+
+        if (supplier.length > 0) {
+            res.json(supplier[0]);
         } else {
             res.status(404).json({ message: 'Supplier not found' });
         }
@@ -24,8 +35,18 @@ exports.getSupplierById = async (req, res) => {
 
 exports.createSupplier = async (req, res) => {
     try {
-        const newSupplier = await Supplier.create(req.body);
-        res.status(201).json(newSupplier);
+        const [result] = await sequelize.query(
+            `INSERT INTO supplier (supplier_name)
+             VALUES (:supplier_name)`,
+            {
+                type: QueryTypes.INSERT,
+                replacements: {
+                    supplier_name: req.body.supplier_name
+                }
+            }
+        );
+
+        res.status(201).json({ message: 'Supplier created successfully', supplier_id: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -33,12 +54,28 @@ exports.createSupplier = async (req, res) => {
 
 exports.updateSupplier = async (req, res) => {
     try {
-        const [updated] = await Supplier.update(req.body, {
-            where: { supplier_id: req.params.id }
-        });
+        const [updated] = await sequelize.query(
+            `UPDATE supplier SET 
+                supplier_name = :supplier_name
+             WHERE supplier_id = :supplier_id`,
+            {
+                type: QueryTypes.UPDATE,
+                replacements: {
+                    supplier_name: req.body.supplier_name,
+                    supplier_id: req.params.id
+                }
+            }
+        );
+
         if (updated) {
-            const updatedSupplier = await Supplier.findByPk(req.params.id);
-            res.json(updatedSupplier);
+            const updatedSupplier = await sequelize.query(
+                `SELECT * FROM supplier WHERE supplier_id = :supplier_id`,
+                {
+                    type: QueryTypes.SELECT,
+                    replacements: { supplier_id: req.params.id }
+                }
+            );
+            res.json(updatedSupplier[0]);
         } else {
             res.status(404).json({ message: 'Supplier not found' });
         }
@@ -49,9 +86,14 @@ exports.updateSupplier = async (req, res) => {
 
 exports.deleteSupplier = async (req, res) => {
     try {
-        const deleted = await Supplier.destroy({
-            where: { supplier_id: req.params.id }
-        });
+        const deleted = await sequelize.query(
+            `DELETE FROM supplier WHERE supplier_id = :supplier_id`,
+            {
+                type: QueryTypes.DELETE,
+                replacements: { supplier_id: req.params.id }
+            }
+        );
+
         if (deleted) {
             res.status(204).json();
         } else {

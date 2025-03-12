@@ -24,45 +24,21 @@ function initAttendance() {
   const editAttendanceForm = document.getElementById("editAttendanceForm");
   let editAttendanceIndex = null;
 
-  // Sample data (replace with actual data fetching logic)
-  let attendanceData = [
-    {
-      empID: "E001",
-      firstName: "Savannah",
-      middleName: "",
-      lastName: "Nguyen",
-      employeeStatus: "Active",
-      attendanceStatus: "Present",
-      date: "2025-03-10",
-      timeIn: "08:00",
-      timeOut: "17:00",
-      remarks: "On time",
-    },
-    {
-      empID: "E002",
-      firstName: "Michael",
-      middleName: "",
-      lastName: "Johnson",
-      employeeStatus: "Probationary",
-      attendanceStatus: "Leave of Absence",
-      date: "2025-03-10",
-      timeIn: "--:--",
-      timeOut: "--:--",
-      remarks: "Family emergency",
-    },
-    {
-      empID: "E003",
-      firstName: "Erin",
-      middleName: "",
-      lastName: "Stone",
-      employeeStatus: "Part-Time",
-      attendanceStatus: "Suspended",
-      date: "2025-03-10",
-      timeIn: "10:00",
-      timeOut: "18:00",
-      remarks: "Late multiple times",
-    },
-  ];
+  let attendanceData = [];
+
+  // Fetch attendance data from the API
+  function fetchAttendanceData() {
+    return fetch('http://127.0.0.1:3000/api/employee-attendances')
+      .then(response => response.json())
+      .then(data => {
+        attendanceData = data;
+        renderTable();
+        updateSummaryBoxes();
+      })
+      .catch(error => {
+        console.error('Error fetching attendance data:', error);
+      });
+  }
 
   // Add Attendance Modal
   if (btnAddAttendance) {
@@ -86,6 +62,7 @@ function initAttendance() {
 
   // --- Utility Functions ---
   function computeHoursWorked(timeIn, timeOut) {
+    if (!timeIn || !timeOut) return "0.00";
     let [inH, inM] = timeIn.split(":").map(Number);
     let [outH, outM] = timeOut.split(":").map(Number);
     let start = inH * 60 + inM;
@@ -142,11 +119,11 @@ function initAttendance() {
         <td class="toggle-cell">
           <i class="fa-solid fa-chevron-right toggle-btn"></i>
         </td>
-        <td>${attendance.empID}</td>
-        <td>${attendance.firstName} ${attendance.lastName}</td>
+        <td>${attendance.employee_id}</td>
+        <td>${attendance.first_name} ${attendance.last_name}</td>
         <td>
-          <span class="att-status" style="color: ${getAttendanceColor(attendance.attendanceStatus)};">
-            ${attendance.attendanceStatus}
+          <span class="att-status" style="color: ${getAttendanceColor(attendance.attendance_status)};">
+            ${attendance.attendance_status}
           </span>
         </td>
         <td>${attendance.date}</td>
@@ -179,14 +156,14 @@ function initAttendance() {
               <tbody>
                 <tr>
                   <td>
-                    <span class="emp-status" style="background-color: ${getEmployeeStatusColor(attendance.employeeStatus)};">
-                      ${attendance.employeeStatus}
+                    <span class="emp-status" style="background-color: ${getEmployeeStatusColor(attendance.employee_status)};">
+                      ${attendance.employee_status}
                     </span>
                   </td>
-                  <td>${attendance.timeIn}</td>
-                  <td>${attendance.timeOut}</td>
-                  <td>${computeHoursWorked(attendance.timeIn, attendance.timeOut)}</td>
-                  <td>${attendance.remarks}</td>
+                  <td>${attendance.time_in || ''}</td>
+                  <td>${attendance.time_out || ''}</td>
+                  <td>${computeHoursWorked(attendance.time_in, attendance.time_out)}</td>
+                  <td>${attendance.remarks || ''}</td>
                 </tr>
               </tbody>
             </table>
@@ -214,9 +191,7 @@ function initAttendance() {
       const deleteBtn = parentRow.querySelector(".delete-btn");
       deleteBtn.addEventListener("click", () => {
         if (confirm("Are you sure you want to delete this attendance record?")) {
-          attendanceData.splice(startIndex + idx, 1);
-          renderTable();
-          updateSummaryBoxes();
+          deleteAttendance(startIndex + idx);
         }
       });
     });
@@ -230,22 +205,22 @@ function initAttendance() {
       let textToSearch = "";
       switch (criteria) {
         case "all":
-          textToSearch = attendance.empID + attendance.firstName + attendance.lastName + attendance.employeeStatus + attendance.attendanceStatus;
+          textToSearch = attendance.employee_id + attendance.first_name + attendance.last_name + attendance.employee_status + attendance.attendance_status;
           break;
         case "attendance":
-          textToSearch = attendance.attendanceStatus;
+          textToSearch = attendance.attendance_status;
           break;
         case "empstatus":
-          textToSearch = attendance.employeeStatus;
+          textToSearch = attendance.employee_status;
           break;
         case "name":
-          textToSearch = attendance.firstName + " " + attendance.lastName;
+          textToSearch = attendance.first_name + " " + attendance.last_name;
           break;
         case "hours":
-          textToSearch = computeHoursWorked(attendance.timeIn, attendance.timeOut).toString();
+          textToSearch = computeHoursWorked(attendance.time_in, attendance.time_out).toString();
           break;
         default:
-          textToSearch = attendance.empID + attendance.firstName + attendance.lastName + attendance.employeeStatus + attendance.attendanceStatus;
+          textToSearch = attendance.employee_id + attendance.first_name + attendance.last_name + attendance.employee_status + attendance.attendance_status;
       }
       return textToSearch.toLowerCase().includes(searchVal);
     });
@@ -262,8 +237,8 @@ function initAttendance() {
       "Parental Leave": 0,
     };
     attendanceData.forEach(attendance => {
-      if (counts.hasOwnProperty(attendance.attendanceStatus)) {
-        counts[attendance.attendanceStatus]++;
+      if (counts.hasOwnProperty(attendance.attendance_status)) {
+        counts[attendance.attendance_status]++;
       }
     });
     document.getElementById("presentCount").textContent = counts["Present"];
@@ -314,15 +289,15 @@ function initAttendance() {
   function openEditModal(index) {
     editAttendanceIndex = index;
     const attendance = attendanceData[index];
-    document.getElementById("editEmpID").value = attendance.empID;
-    document.getElementById("editEmpFirstName").value = attendance.firstName;
-    document.getElementById("editEmpMiddleName").value = attendance.middleName;
-    document.getElementById("editEmpLastName").value = attendance.lastName;
-    document.getElementById("editEmpStatus").value = attendance.employeeStatus;
-    document.getElementById("editAttendanceStatus").value = attendance.attendanceStatus;
+    document.getElementById("editEmpID").value = attendance.employee_id;
+    document.getElementById("editEmpFirstName").value = attendance.first_name;
+    document.getElementById("editEmpMiddleName").value = attendance.middle_name;
+    document.getElementById("editEmpLastName").value = attendance.last_name;
+    document.getElementById("editEmpStatus").value = attendance.employee_status;
+    document.getElementById("editAttendanceStatus").value = attendance.attendance_status;
     document.getElementById("editDate").value = attendance.date;
-    document.getElementById("editTimeIn").value = attendance.timeIn;
-    document.getElementById("editTimeOut").value = attendance.timeOut;
+    document.getElementById("editTimeIn").value = attendance.time_in;
+    document.getElementById("editTimeOut").value = attendance.time_out;
     document.getElementById("editRemarks").value = attendance.remarks;
     editAttendanceModal.style.display = "block";
   }
@@ -332,22 +307,36 @@ function initAttendance() {
     addAttendanceForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const newAttendance = {
-        empID: document.getElementById("addEmpID").value.trim(),
-        firstName: document.getElementById("addEmpFirstName").value.trim(),
-        middleName: document.getElementById("addEmpMiddleName").value.trim(),
-        lastName: document.getElementById("addEmpLastName").value.trim(),
-        employeeStatus: document.getElementById("addEmpStatus").value,
-        attendanceStatus: document.getElementById("addAttendanceStatus").value,
+        employee_id: document.getElementById("addEmpID").value.trim(),
+        first_name: document.getElementById("addEmpFirstName").value.trim(),
+        middle_name: document.getElementById("addEmpMiddleName").value.trim(),
+        last_name: document.getElementById("addEmpLastName").value.trim(),
+        employee_status: document.getElementById("addEmpStatus").value,
+        attendance_status: document.getElementById("addAttendanceStatus").value,
         date: document.getElementById("addDate").value,
-        timeIn: document.getElementById("addTimeIn").value,
-        timeOut: document.getElementById("addTimeOut").value,
+        time_in: document.getElementById("addTimeIn").value,
+        time_out: document.getElementById("addTimeOut").value,
         remarks: document.getElementById("addRemarks").value.trim(),
       };
-      attendanceData.push(newAttendance);
-      addAttendanceModal.style.display = "none";
-      addAttendanceForm.reset();
-      renderTable();
-      updateSummaryBoxes();
+
+      fetch('http://127.0.0.1:3000/api/employee-attendances', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newAttendance)
+      })
+      .then(response => response.json())
+      .then(data => {
+        attendanceData.push(data);
+        addAttendanceModal.style.display = "none";
+        addAttendanceForm.reset();
+        renderTable();
+        updateSummaryBoxes();
+      })
+      .catch(error => {
+        console.error('Error adding attendance:', error);
+      });
     });
   }
 
@@ -355,28 +344,56 @@ function initAttendance() {
     editAttendanceForm.addEventListener("submit", (e) => {
       e.preventDefault();
       if (editAttendanceIndex === null) return;
-      attendanceData[editAttendanceIndex] = {
-        empID: document.getElementById("editEmpID").value.trim(),
-        firstName: document.getElementById("editEmpFirstName").value.trim(),
-        middleName: document.getElementById("editEmpMiddleName").value.trim(),
-        lastName: document.getElementById("editEmpLastName").value.trim(),
-        employeeStatus: document.getElementById("editEmpStatus").value,
-        attendanceStatus: document.getElementById("editAttendanceStatus").value,
+      const updatedAttendance = {
+        employee_id: document.getElementById("editEmpID").value.trim(),
+        first_name: document.getElementById("editEmpFirstName").value.trim(),
+        middle_name: document.getElementById("editEmpMiddleName").value.trim(),
+        last_name: document.getElementById("editEmpLastName").value.trim(),
+        employee_status: document.getElementById("editEmpStatus").value,
+        attendance_status: document.getElementById("editAttendanceStatus").value,
         date: document.getElementById("editDate").value,
-        timeIn: document.getElementById("editTimeIn").value,
-        timeOut: document.getElementById("editTimeOut").value,
+        time_in: document.getElementById("editTimeIn").value,
+        time_out: document.getElementById("editTimeOut").value,
         remarks: document.getElementById("editRemarks").value.trim(),
       };
-      editAttendanceModal.style.display = "none";
-      editAttendanceForm.reset();
+
+      fetch(`http://127.0.0.1:3000/api/employee-attendances/${attendanceData[editAttendanceIndex].attendance_id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedAttendance)
+      })
+      .then(response => response.json())
+      .then(data => {
+        attendanceData[editAttendanceIndex] = data;
+        editAttendanceModal.style.display = "none";
+        editAttendanceForm.reset();
+        renderTable();
+        updateSummaryBoxes();
+      })
+      .catch(error => {
+        console.error('Error updating attendance:', error);
+      });
+    });
+  }
+
+  function deleteAttendance(index) {
+    fetch(`http://127.0.0.1:3000/api/employee-attendances/${attendanceData[index].attendance_id}`, {
+      method: 'DELETE'
+    })
+    .then(() => {
+      attendanceData.splice(index, 1);
       renderTable();
       updateSummaryBoxes();
+    })
+    .catch(error => {
+      console.error('Error deleting attendance:', error);
     });
   }
 
   // --- Initial Render ---
-  renderTable();
-  updateSummaryBoxes();
+  fetchAttendanceData();
 }
 
 // Expose the initialization function so it can be called externally

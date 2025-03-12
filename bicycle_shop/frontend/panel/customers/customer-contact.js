@@ -7,7 +7,6 @@ function initCustomerContact() {
   const nextPageBtn = document.getElementById("nextPage");
   const pageNumberSpan = document.getElementById("pageNumber");
   const btnAddContact = document.getElementById("btnAddContact");
-  const btnAddContactBottom = document.getElementById("btnAddContactBottom");
   const addContactModal = document.getElementById("addContactModal");
   const closeAddContactModal = document.getElementById("closeAddContactModal");
   const addContactForm = document.getElementById("addContactForm");
@@ -18,6 +17,20 @@ function initCustomerContact() {
   // Pagination variables
   let currentPage = 1;
   const rowsPerPage = 10;
+
+  // Local data storage
+  let contactData = [];
+
+  // Fetch customer contacts data from the API
+  function fetchCustomerContacts() {
+    fetch('http://localhost:3000/api/customer-contacts')
+      .then(response => response.json())
+      .then(data => {
+        contactData = data;
+        renderTable();
+      })
+      .catch(error => console.error('Error fetching customer contacts:', error));
+  }
 
   // Render the contact table
   function renderTable() {
@@ -34,10 +47,14 @@ function initCustomerContact() {
 
     contactTbody.innerHTML = "";
     pageData.forEach((contact, idx) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${contact.contact_id}</td>
+      const parentRow = document.createElement("tr");
+      parentRow.classList.add("parent-row");
+      parentRow.innerHTML = `
+        <td class="toggle-cell">
+          <i class="fa-solid fa-chevron-right toggle-btn"></i>
+        </td>
         <td>${contact.customer_id}</td>
+        <td>${contact.customer_name}</td>
         <td>${contact.contact_type}</td>
         <td>${contact.contact_value}</td>
         <td>${contact.is_primary === "Y" ? "Yes" : "No"}</td>
@@ -47,20 +64,66 @@ function initCustomerContact() {
           <i class="fa-solid fa-trash delete-contact"></i>
         </td>
       `;
+
+      const childRow = document.createElement("tr");
+      childRow.classList.add("child-row");
+      childRow.innerHTML = `
+        <td colspan="8">
+          <h3 style="color: #ab0d07;">Other Contacts</h3>
+          <table class="contact-detail-table">
+            <thead>
+              <tr>
+                <th>Contact Type</th>
+                <th>Contact Value</th>
+                <th>Active</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${contactData
+                .filter(c => c.customer_id === contact.customer_id && c.customer_contact_id !== contact.customer_contact_id)
+                .map(c => `
+                  <tr>
+                    <td>${c.contact_type}</td>
+                    <td>${c.contact_value}</td>
+                    <td>${c.is_active === "Y" ? "Yes" : "No"}</td>
+                  </tr>
+                `).join('')}
+            </tbody>
+          </table>
+        </td>
+      `;
+
+
+      contactTbody.appendChild(parentRow);
+      contactTbody.appendChild(childRow);
+
+      // Toggle Child Row
+      const toggleBtn = parentRow.querySelector(".toggle-btn");
+      toggleBtn.addEventListener("click", () => {
+        toggleBtn.classList.toggle("rotated");
+        childRow.style.display = (childRow.style.display === "table-row") ? "none" : "table-row";
+      });
+
       // Attach edit functionality
-      const editIcon = row.querySelector(".edit-contact");
+      const editIcon = parentRow.querySelector(".edit-contact");
       editIcon.addEventListener("click", () => {
         openEditModal(contact, startIndex + idx);
       });
+
       // Attach delete functionality
-      const deleteIcon = row.querySelector(".delete-contact");
+      const deleteIcon = parentRow.querySelector(".delete-contact");
       deleteIcon.addEventListener("click", () => {
         if (confirm("Are you sure you want to delete this contact?")) {
-          contactData.splice(startIndex + idx, 1);
-          renderTable();
+          fetch(`http://localhost:3000/api/customer-contacts/${contact.customer_contact_id}`, {
+            method: 'DELETE',
+          })
+            .then(() => {
+              contactData.splice(startIndex + idx, 1);
+              renderTable();
+            })
+            .catch(error => console.error('Error deleting contact:', error));
         }
       });
-      contactTbody.appendChild(row);
     });
   }
 
@@ -72,10 +135,10 @@ function initCustomerContact() {
       let textToSearch = "";
       switch (criteria) {
         case "all":
-          textToSearch = `${contact.contact_id} ${contact.customer_id} ${contact.contact_type} ${contact.contact_value} ${contact.is_primary} ${contact.is_active}`;
+          textToSearch = `${contact.customer_id} ${contact.customer_name} ${contact.contact_type} ${contact.contact_value} ${contact.is_primary} ${contact.is_active}`;
           break;
         case "customer":
-          textToSearch = contact.customer_id;
+          textToSearch = contact.customer_name;
           break;
         case "type":
           textToSearch = contact.contact_type;
@@ -84,7 +147,7 @@ function initCustomerContact() {
           textToSearch = contact.contact_value;
           break;
         default:
-          textToSearch = `${contact.contact_id} ${contact.customer_id} ${contact.contact_type} ${contact.contact_value}`;
+          textToSearch = `${contact.customer_id} ${contact.customer_name} ${contact.contact_type} ${contact.contact_value}`;
       }
       return textToSearch.toString().toLowerCase().includes(searchVal);
     });
@@ -111,27 +174,35 @@ function initCustomerContact() {
     const contact_value = document.getElementById("contactValue").value.trim();
     const is_primary = document.getElementById("isPrimary").value;
     const is_active = document.getElementById("isActive").value;
-    // Auto-generate new contact ID
-    const newID = contactData.length ? Math.max(...contactData.map(c => c.contact_id)) + 1 : 201;
+
     const newContact = {
-      contact_id: newID,
       customer_id,
-      contact_type,
+      contact_type_code: contact_type,
       contact_value,
       is_primary,
       is_active
     };
-    contactData.push(newContact);
-    renderTable();
-    addContactForm.reset();
-    addContactModal.style.display = "none";
+
+    fetch('http://localhost:3000/api/customer-contacts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newContact)
+    })
+      .then(response => response.json())
+      .then(data => {
+        contactData.push(data);
+        renderTable();
+        addContactForm.reset();
+        addContactModal.style.display = "none";
+      })
+      .catch(error => console.error('Error adding contact:', error));
   });
 
   // Modal handling for Edit Contact
   function openEditModal(contact, index) {
     document.getElementById("editContactIndex").value = index;
     document.getElementById("editContactCustomerID").value = contact.customer_id;
-    document.getElementById("editContactType").value = contact.contact_type;
+    document.getElementById("editContactType").value = contact.contact_type_code;
     document.getElementById("editContactValue").value = contact.contact_value;
     document.getElementById("editIsPrimary").value = contact.is_primary;
     document.getElementById("editIsActive").value = contact.is_active;
@@ -148,14 +219,27 @@ function initCustomerContact() {
   editContactForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const index = document.getElementById("editContactIndex").value;
-    contactData[index].customer_id = document.getElementById("editContactCustomerID").value.trim();
-    contactData[index].contact_type = document.getElementById("editContactType").value;
-    contactData[index].contact_value = document.getElementById("editContactValue").value.trim();
-    contactData[index].is_primary = document.getElementById("editIsPrimary").value;
-    contactData[index].is_active = document.getElementById("editIsActive").value;
-    renderTable();
-    editContactForm.reset();
-    editContactModal.style.display = "none";
+    const updatedContact = {
+      customer_id: document.getElementById("editContactCustomerID").value.trim(),
+      contact_type_code: document.getElementById("editContactType").value,
+      contact_value: document.getElementById("editContactValue").value.trim(),
+      is_primary: document.getElementById("editIsPrimary").value,
+      is_active: document.getElementById("editIsActive").value
+    };
+
+    fetch(`http://localhost:3000/api/customer-contacts/${contactData[index].customer_contact_id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedContact)
+    })
+      .then(response => response.json())
+      .then(data => {
+        contactData[index] = data;
+        renderTable();
+        editContactForm.reset();
+        editContactModal.style.display = "none";
+      })
+      .catch(error => console.error('Error updating contact:', error));
   });
 
   // Pagination controls
@@ -184,8 +268,8 @@ function initCustomerContact() {
     renderTable();
   });
 
-  // Initial render
-  renderTable();
+  // Initial fetch and render
+  fetchCustomerContacts();
 }
 
 window.initCustomerContact = initCustomerContact;

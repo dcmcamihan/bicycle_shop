@@ -9,7 +9,19 @@
     background-color: #1a1a1a;
     color: #fff;
   }
-  
+
+  .edit-customer {
+    cursor: pointer; 
+  }
+
+  /* Styles for the delete icon */
+.delete-customer {
+  cursor: pointer;
+  margin-left: 10px; 
+  color: #ff4d4d; 
+  transition: color 0.3s ease; 
+}
+
   /* Container */
   .customer-list-container {
     max-width: 1200px;
