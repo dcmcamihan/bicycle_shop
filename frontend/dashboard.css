@@ -1,0 +1,352 @@
+/* Reset & Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Oswald", sans-serif;
+  background-color: #1a1a1a; 
+  color: #fff;
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px; /* Expanded width */
+  height: 100vh;
+  background: linear-gradient(180deg, #000 0%, #222 100%);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+}
+
+.sidebar.collapsed {
+  width: 70px; /* Collapsed width */
+}
+
+/* SIDEBAR HEADER */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  transition: opacity 0.3s ease;
+}
+
+.logo h2 {
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ab0d07;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .logo h2 {
+  opacity: 0;
+}
+
+/* SIDEBAR NAV */
+.sidebar-nav ul {
+  list-style: none;
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: 5px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease, padding 0.3s ease;
+  border-radius: 4px;
+}
+
+.sidebar-nav a:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.sidebar-nav a.active {
+  background-color: #ab0d07;
+  color: #fff;
+}
+
+.sidebar-nav i {
+  margin-right: 15px;
+  font-size: 1.2rem;
+  width: 20px; /* Fixed width for alignment */
+  text-align: center;
+}
+
+.link-text {
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .link-text {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Collapsible Menu Styles */
+.sidebar-nav li.collapsible > .collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 12px 20px;
+  transition: background 0.3s ease;
+  border-radius: 4px;
+}
+
+.sidebar-nav li.collapsible > .collapsible-header:hover {
+  background-color: #444;
+}
+
+.sidebar-nav li.collapsible > .collapsible-header .arrow {
+  transition: transform 0.3s ease;
+  font-size: 0.9rem;
+  margin-left: auto;
+  transform: rotate(-90deg);
+}
+
+.sidebar-nav li.collapsible.active > .collapsible-header .arrow {
+  transform: rotate(0deg);
+}
+
+.sidebar-nav li.collapsible .sub-menu {
+  list-style: none;
+  padding-left: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.sidebar-nav li.collapsible.active > .sub-menu {
+  max-height: 500px; /* Adjust as needed */
+}
+
+.sidebar-nav li.collapsible .sub-menu li a {
+  padding: 10px 20px;
+  color: #bbb;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.sidebar-nav li.collapsible .sub-menu li a:hover {
+  color: #fff;
+  background-color: #333;
+}
+
+/* Hide the sub-menu arrow icon when the sidebar is collapsed */
+.sidebar.collapsed li.collapsible .arrow {
+  display: none !important;
+}
+
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  transition: margin-left 0.3s ease;
+  padding: 20px;
+}
+
+.sidebar.collapsed ~ .main-content {
+  margin-left: 70px;
+}
+
+/* TOPBAR */
+.topbar {
+  position: relative; 
+  background-image: url("img/topbar-img.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 40px;
+  background-color: #111;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.topbar * {
+  position: relative;
+  z-index: 2;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar h1 {
+  font-size: 1.5rem;
+}
+
+/* Toggle & Theme Buttons */
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
+  color: #fff;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  color: #fff;
+}
+
+/* DASHBOARD SECTION */
+.dashboard-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.dashboard-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #ab0d07;
+}
+
+/* Floating Settings Button */
+.settings-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ab0d07;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+
+.settings-fab:hover {
+  background-color: #900c06;
+  transform: scale(1.1);
+}
+
+body:not(.light-mode) .settings-fab {
+  box-shadow: 0 4px 8px rgba(171, 13, 7, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+  .sidebar-header {
+    padding: 10px;
+  }
+  .logo h2 {
+    display: none;
+  }
+  .main-content {
+    margin-left: 70px;
+    padding: 10px;
+  }
+  .dashboard-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LIGHT MODE OVERRIDES */
+body.light-mode .sidebar {
+  background: #fff !important;
+  color: #333 !important;
+}
+
+body.light-mode .sidebar-nav a {
+  color: #555 !important;
+}
+
+body.light-mode .sidebar-nav a:hover {
+  color: white!important;
+}
+
+body.light-mode .topbar {
+  background-color: #a6a6a6 !important;
+  color: #ffffff !important;
+}
+
+body.light-mode .dashboard-card {
+  background-color: #fff !important;
+  color: #333 !important;
+}
+
+body.light-mode .sidebar-nav a.active {
+  background-color: #ab0d07 !important;
+  color: #fff !important;
+}
+
+body.light-mode {
+  background-color: #f4f4f4 !important;
+  color: #333 !important;
+}
+
+.sidebar-nav {
+  flex: 1; 
+  overflow-y: auto;
+  padding-bottom: 20px; 
+}

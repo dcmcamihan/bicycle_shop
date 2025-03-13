@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Oswald", sans-serif;
+  }
+  
+  body {
+    position: relative;
+    display: flex;
+    height: 100vh;
+    background: url("img/bike-img7.svg") no-repeat left center/cover;
+  }
+  
+  .login-container {
+    position: absolute;
+    top: 50%;
+    left: 70%; 
+    transform: translate(-40%, -50%); 
+    z-index: 2;
+  }  
+
+  .login-box {
+    position: relative;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 40px;
+    border-radius: 20px;
+    color: #fff;
+    width: 450px;
+    box-shadow: 
+      0 0 15px rgba(171, 13, 7, 0.7), 
+      0 0 35px rgba(171, 13, 7, 0.4);
+  }
+  
+  .login-box h2 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .login-box p {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: #bbb;
+  }
+  
+  /* Input Fields */
+  .input-group {
+    display: flex;
+    align-items: center;
+    background: #222;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .input-group i {
+    color: #ab0d07;
+    margin-right: 10px;
+  }
+  
+  .input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-size: 1.2rem;
+    width: 100%;
+  }
+  
+  ::placeholder {
+    color: #888;
+  }
+  
+  /* Remember Me & Forgot Password */
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  
+  .remember-forgot a {
+    color: #ab0d07;
+    text-decoration: none;
+  }
+  
+  .remember-forgot a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Login Button */
+  .login-btn {
+    width: 100%;
+    background: #ab0d07;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .login-btn:hover {
+    background: #900c06;
+  }
+  
+  /* Register Link */
+  .register-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+  
+  .register-link a {
+    color: #ab0d07;
+    text-decoration: none;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      justify-content: center;
+      background: url("img/bike-login-bg.jpg") no-repeat center center/cover;
+    }
+  
+    .login-container {
+      position: relative;
+      right: 0;
+      top: 0;
+      transform: none;
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  
+    .login-box {
+      width: 90%;
+      box-shadow: 
+        0 0 10px rgba(171, 13, 7, 0.7), 
+        0 0 25px rgba(171, 13, 7, 0.4);
+    }
+  }
+  

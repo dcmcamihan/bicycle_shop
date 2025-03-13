@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brands &amp; Categories | Jolens Bicycle Supply</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+  <div class="bc-container">
+    <h1>Brands &amp; Categories</h1>
+    <!-- Tab Buttons -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="brands">Brands</button>
+      <button class="tab-button" data-tab="categories">Categories</button>
+    </div>
+    
+    <!-- Brands Tab -->
+    <div class="tab-content active" id="brands">
+      <div class="brand-list" id="brandList">
+        <!-- Brands will be inserted here dynamically -->
+      </div>
+      <button class="btn-add" id="addBrandBtn">Add Brand</button>
+    </div>
+    
+    <!-- Categories Tab -->
+    <div class="tab-content" id="categories">
+      <table class="categories-table">
+        <thead>
+          <tr>
+            <th>Category Code</th>
+            <th>Category Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="categoryList">
+          <!-- Categories will be inserted here dynamically -->
+        </tbody>
+      </table>
+      <button class="btn-add" id="addCategoryBtn">Add Category</button>
+    </div>
+  </div>
+
+  <!-- Modal for Brands & Categories -->
+  <div class="modal" id="bcModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2 id="modalTitle">Edit</h2>
+      <form id="bcForm">
+        <!-- Brand Fields -->
+        <div class="form-group" id="brandGroup">
+          <label for="brandName">Brand Name</label>
+          <input type="text" id="brandName" placeholder="e.g. Shimano" required>
+          <label for="brandOrigin">Origin</label>
+          <input type="text" id="brandOrigin" placeholder="e.g. Japan" required>
+        </div>
+        <!-- Category Fields -->
+        <div class="form-group" id="categoryGroup" style="display: none;">
+          <label for="categoryCode">Category Code</label>
+          <input type="text" id="categoryCode" placeholder="e.g. BIKECOMP" required>
+          <label for="categoryName">Category Name</label>
+          <input type="text" id="categoryName" placeholder="e.g. Bike Components" required>
+        </div>
+        <button type="submit" class="btn-submit">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="brandsCategories.js"></script>
+</body>
+</html>

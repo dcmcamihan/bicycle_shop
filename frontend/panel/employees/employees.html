@@ -1,0 +1,145 @@
+<div class="employees-page-container">
+  <h1>Employee List</h1>
+  
+  <!-- Search & Filter Container -->
+  <div class="search-filter-container">
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search employees..." />
+    </div>
+    <div class="filter-dropdown">
+      <select id="filterCriteria">
+        <option value="all">All</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Other</option>
+      </select>
+    </div>
+    <button class="btn-add-employee" id="btnAddEmployee">
+      <i class="fa-solid fa-plus"></i> Add Employee
+    </button>
+  </div>
+  
+  <!-- Employee Table -->
+  <table class="employees-table">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <!-- Removed Employee ID column -->
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Birth Date</th>
+        <th>Gender</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="employeeTbody">
+      <!-- Rows will be dynamically added here by JavaScript -->
+    </tbody>
+  </table>
+  
+  <!-- Table Controls: Pagination & Add Employee Button (placed on opposite sides) -->
+  <div class="table-controls">
+    <div class="pagination">
+      <button id="prevPage" disabled>« Prev</button>
+      <span id="pageNumber">1</span>
+      <button id="nextPage">Next »</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal" id="addEmployeeModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeAddEmployeeModal">&times;</span>
+    <h2>Add Employee</h2>
+    <form id="addEmployeeForm">
+      <div class="form-group">
+        <label for="employeeFirstName">First Name</label>
+        <input type="text" id="employeeFirstName" placeholder="First Name" required />
+      </div>
+      <div class="form-group">
+        <label for="employeeMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="employeeMiddleName" placeholder="Middle Name" />
+      </div>
+      <div class="form-group">
+        <label for="employeeLastName">Last Name</label>
+        <input type="text" id="employeeLastName" placeholder="Last Name" required />
+      </div>
+      <div class="form-group">
+        <label for="employeeGender">Gender</label>
+        <select id="employeeGender" required>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="employeeBirthDate">Birth Date</label>
+        <input type="date" id="employeeBirthDate" required />
+      </div>
+      <div class="form-group">
+        <label for="employeeUsername">Username</label>
+        <input type="text" id="employeeUsername" placeholder="Username" required />
+      </div>
+      <div class="form-group">
+        <label for="employeeStatus">Status</label>
+        <select id="employeeStatus" required>
+          <option value="0006">Active</option>
+          <option value="0007">On Leave</option>
+          <option value="0008">Terminated</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Add Employee</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Employee Modal -->
+<div class="modal" id="editEmployeeModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeEditEmployeeModal">&times;</span>
+    <h2>Edit Employee</h2>
+    <form id="editEmployeeForm">
+      <input type="hidden" id="editEmployeeIndex" />
+      <div class="form-group">
+        <label for="editEmployeeFirstName">First Name</label>
+        <input type="text" id="editEmployeeFirstName" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="editEmployeeMiddleName" />
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeLastName">Last Name</label>
+        <input type="text" id="editEmployeeLastName" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeGender">Gender</label>
+        <select id="editEmployeeGender" required>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+          <option value="O">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeBirthDate">Birth Date</label>
+        <input type="date" id="editEmployeeBirthDate" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeUsername">Username</label>
+        <input type="text" id="editEmployeeUsername" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmployeeStatus">Status</label>
+        <select id="editEmployeeStatus" required>
+          <option value="0006">Active</option>
+          <option value="0007">On Leave</option>
+          <option value="0008">Terminated</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">Save Changes</button>
+    </form>
+  </div>
+</div>

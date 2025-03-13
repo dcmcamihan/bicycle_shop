@@ -1,0 +1,224 @@
+<div class="attendance-page-container">
+  <!-- Left Column: Table & Controls -->
+  <div class="left-column">
+    <h1>Employee Attendance</h1>
+
+    <!-- Filter & Search Container -->
+    <div class="search-filter-container">
+      <!-- Filter Dropdown -->
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="attendance">Attendance Status</option>
+          <option value="empstatus">Employee Status</option>
+          <option value="name">Name</option>
+          <option value="hours">Hours Worked</option>
+          <option value="date">Date</option>
+        </select>
+      </div>
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search attendance..." />
+      </div>
+      <!-- Add Attendance Button -->
+      <button class="btn-add-attendance" id="btnAddAttendance">
+        <i class="fa-solid fa-plus"></i> Add Attendance
+      </button>
+    </div>
+
+    <!-- Attendance Table -->
+    <table class="attendance-table collapsible-table">
+      <thead>
+        <tr>
+          <th class="toggle-cell"></th>
+          <th>Employee ID</th>
+          <th>Name</th>
+          <th>Attendance Status</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTbody">
+        <!-- Rows will be dynamically added here by JavaScript -->
+      </tbody>
+    </table>
+    
+    <!-- Table Controls: Pagination -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Google Calendar & Summary Boxes -->
+  <div class="right-column">
+    <!-- Google Calendar Embed -->
+    <div class="calendar-container">
+      <iframe src="https://calendar.google.com/calendar/embed?src=ad6ef02e69c9965d2a7f7cfefcbfc934f589d8fb83e387154cc19312423eb90d%40group.calendar.google.com&ctz=Asia%2FManila" 
+      style="border: 0" 
+      width="400" 
+      height="300" 
+      frameborder="0" 
+      scrolling="no"></iframe>
+    </div>
+
+    <!-- Summary Boxes -->
+    <div class="summary-boxes">
+      <div class="summary-box total-box">
+        <h4>Total Employees</h4>
+        <p id="totalEmployees">0</p>
+      </div>
+      <div class="summary-box present-box">
+        <h4>Present</h4>
+        <p id="presentCount">0</p>
+      </div>
+      <div class="summary-box absent-box">
+        <h4>Absent</h4>
+        <p id="absentCount">0</p>
+      </div>
+      <div class="summary-box other-box">
+        <h4>Other Status</h4>
+        <p id="otherCount">0</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADD ATTENDANCE MODAL ========== -->
+<div class="modal" id="addAttendanceModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeAddModal">&times;</span>
+    <h2>Add Attendance</h2>
+    <form id="addAttendanceForm">
+      <div class="form-group">
+        <label for="addEmpID">Employee ID</label>
+        <input type="text" id="addEmpID" required />
+      </div>
+      <!-- Name split into first, middle, last -->
+      <div class="form-group">
+        <label for="addEmpFirstName">First Name</label>
+        <input type="text" id="addEmpFirstName" required />
+      </div>
+      <div class="form-group">
+        <label for="addEmpMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="addEmpMiddleName" />
+      </div>
+      <div class="form-group">
+        <label for="addEmpLastName">Last Name</label>
+        <input type="text" id="addEmpLastName" required />
+      </div>
+      <div class="form-group">
+        <label for="addEmpStatus">Employee Status</label>
+        <select id="addEmpStatus" required>
+          <option value="Active">Active</option>
+          <option value="Probationary">Probationary</option>
+          <option value="Part-Time">Part-Time</option>
+          <option value="Full-Time">Full-Time</option>
+          <option value="Terminated">Terminated</option>
+          <option value="Resigned">Resigned</option>
+          <option value="Retired">Retired</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="addAttendanceStatus">Attendance Status</label>
+        <select id="addAttendanceStatus" required>
+          <option value="Present">Present</option>
+          <option value="Leave of Absence">Leave of Absence</option>
+          <option value="Suspended">Suspended</option>
+          <option value="Furloughed">Furloughed</option>
+          <option value="Medical Leave">Medical Leave</option>
+          <option value="Parental Leave">Parental Leave</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="addDate">Date</label>
+        <input type="date" id="addDate" required />
+      </div>
+      <div class="form-group">
+        <label for="addTimeIn">Time In</label>
+        <input type="time" id="addTimeIn" required />
+      </div>
+      <div class="form-group">
+        <label for="addTimeOut">Time Out</label>
+        <input type="time" id="addTimeOut" required />
+      </div>
+      <div class="form-group">
+        <label for="addRemarks">Remarks (Optional)</label>
+        <input type="text" id="addRemarks" />
+      </div>
+      <button type="submit" class="btn-submit">Add</button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== EDIT ATTENDANCE MODAL ========== -->
+<div class="modal" id="editAttendanceModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeEditModal">&times;</span>
+    <h2>Edit Attendance</h2>
+    <form id="editAttendanceForm">
+      <input type="hidden" id="editRowIndex" />
+      <div class="form-group">
+        <label for="editEmpID">Employee ID</label>
+        <input type="text" id="editEmpID" required />
+      </div>
+      <!-- Name split into first, middle, last -->
+      <div class="form-group">
+        <label for="editEmpFirstName">First Name</label>
+        <input type="text" id="editEmpFirstName" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmpMiddleName">Middle Name (Optional)</label>
+        <input type="text" id="editEmpMiddleName" />
+      </div>
+      <div class="form-group">
+        <label for="editEmpLastName">Last Name</label>
+        <input type="text" id="editEmpLastName" required />
+      </div>
+      <div class="form-group">
+        <label for="editEmpStatus">Employee Status</label>
+        <select id="editEmpStatus" required>
+          <option value="Active">Active</option>
+          <option value="Probationary">Probationary</option>
+          <option value="Part-Time">Part-Time</option>
+          <option value="Full-Time">Full-Time</option>
+          <option value="Terminated">Terminated</option>
+          <option value="Resigned">Resigned</option>
+          <option value="Retired">Retired</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editAttendanceStatus">Attendance Status</label>
+        <select id="editAttendanceStatus" required>
+          <option value="Present">Present</option>
+          <option value="Leave of Absence">Leave of Absence</option>
+          <option value="Suspended">Suspended</option>
+          <option value="Furloughed">Furloughed</option>
+          <option value="Medical Leave">Medical Leave</option>
+          <option value="Parental Leave">Parental Leave</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="editDate">Date</label>
+        <input type="date" id="editDate" required />
+      </div>
+      <div class="form-group">
+        <label for="editTimeIn">Time In</label>
+        <input type="time" id="editTimeIn" required />
+      </div>
+      <div class="form-group">
+        <label for="editTimeOut">Time Out</label>
+        <input type="time" id="editTimeOut" required />
+      </div>
+      <div class="form-group">
+        <label for="editRemarks">Remarks (Optional)</label>
+        <input type="text" id="editRemarks" />
+      </div>
+      <button type="submit" class="btn-submit">Save Changes</button>
+    </form>
+  </div>
+</div>

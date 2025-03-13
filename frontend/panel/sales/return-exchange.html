@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Returns & Exchange | Jolens Bicycle Supply</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Return/Exchange CSS -->
+  <link rel="stylesheet" href="return-exchange.css" />
+</head>
+<body>
+  <div class="returns-container">
+    <h1>Returns & Exchange</h1>
+    
+    <!-- Search & Filter Container -->
+    <div class="search-filter-container">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search transactions..." />
+      </div>
+      <div class="filter-dropdown">
+        <select id="filterCriteria">
+          <option value="all">All</option>
+          <option value="customer">Customer</option>
+          <option value="date">Date</option>
+          <option value="type">Type</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+      <!-- Single Add button placed above the table -->
+      <button class="btn-add-return" id="btnAddReturn">
+        <i class="fa-solid fa-plus"></i> Add Return/Exchange
+      </button>
+    </div>
+    
+    <!-- Collapsible Returns Table -->
+    <table class="collapsible-table">
+      <thead>
+        <tr>
+          <th></th> <!-- Arrow Column -->
+          <th>Transaction ID</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Type</th>
+          <th>Reason</th>
+          <th>Total Value</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="returnExchangeTbody">
+        <!-- Rows will be rendered dynamically -->
+      </tbody>
+    </table>
+    
+    <!-- Pagination Controls -->
+    <div class="table-controls">
+      <div class="pagination">
+        <button id="prevPage" disabled>« Prev</button>
+        <span id="pageNumber">1</span>
+        <button id="nextPage">Next »</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add/Edit Return/Exchange Modal -->
+  <div class="modal" id="returnModal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeReturnModal">&times;</span>
+      <h2 id="returnModalTitle">Add Return/Exchange</h2>
+      <form id="returnForm">
+        <div class="form-group">
+          <label for="returnCustomer">Customer</label>
+          <input type="text" id="returnCustomer" placeholder="Customer Name" required />
+        </div>
+        <div class="form-group">
+          <label for="returnDate">Date</label>
+          <input type="date" id="returnDate" required />
+        </div>
+        <div class="form-group">
+          <label for="returnType">Type</label>
+          <select id="returnType" required>
+            <option value="Return">Return</option>
+            <option value="Exchange">Exchange</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="returnReason">Reason</label>
+          <input type="text" id="returnReason" placeholder="Reason for return/exchange" required />
+        </div>
+        <div class="form-group">
+          <label for="returnTotal">Total Value</label>
+          <input type="number" id="returnTotal" placeholder="Total" required />
+        </div>
+        <button type="submit" class="btn-submit">Save</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Return/Exchange JS -->
+  <script src="return-exhange.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      initReturnExchange();
+    });
+  </script>
+</body>
+</html>

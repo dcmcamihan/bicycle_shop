@@ -1,0 +1,96 @@
+<div class="supplier-page-container">
+  <h1>Supplier List</h1>
+  
+  <!-- Search & Filter Container -->
+  <div class="search-filter-container">
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search suppliers..." />
+    </div>
+    <div class="filter-dropdown">
+      <select id="filterCriteria">
+        <option value="all">All</option>
+        <option value="name">Supplier Name</option>
+        <option value="city">City</option>
+        <option value="contact">Contact</option>
+      </select>
+    </div>
+    <button class="btn-add-supplier" id="btnAddSupplier">
+      <i class="fa-solid fa-plus"></i> Add Supplier
+    </button>
+  </div>
+  
+  <!-- Supplier Table -->
+  <table class="supplier-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Supplier ID</th>
+        <th>Supplier Name</th>
+      </tr>
+    </thead>
+    <tbody id="supplierTbody">
+      <!-- Dynamic rows will be rendered by JS -->
+    </tbody>
+  </table>
+  
+  <!-- Table Controls: Pagination -->
+  <div class="table-controls">
+    <div class="pagination">
+      <button id="prevPage" disabled>« Prev</button>
+      <span id="pageNumber">1</span>
+      <button id="nextPage">Next »</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Supplier Modal -->
+<div class="modal" id="addSupplierModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeAddSupplierModal">&times;</span>
+    <h2>Add Supplier</h2>
+    <form id="addSupplierForm">
+      <div class="form-group">
+        <label for="supplierName">Supplier Name</label>
+        <input type="text" id="supplierName" placeholder="e.g. CycleWorld" required />
+      </div>
+      <div class="form-group">
+        <label for="supplierCity">City</label>
+        <input type="text" id="supplierCity" placeholder="City" required />
+      </div>
+      <div class="form-group">
+        <label for="supplierContact">Primary Contact</label>
+        <input type="text" id="supplierContact" placeholder="e.g. +639171234567" required />
+      </div>
+      <button type="submit" class="btn-submit">Add Supplier</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Supplier Modal -->
+<div class="modal" id="editSupplierModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeEditSupplierModal">&times;</span>
+    <h2>Edit Supplier</h2>
+    <form id="editSupplierForm">
+      <input type="hidden" id="editSupplierIndex" />
+      <div class="form-group">
+        <label for="editSupplierID">Supplier ID</label>
+        <input type="text" id="editSupplierID" disabled />
+      </div>
+      <div class="form-group">
+        <label for="editSupplierName">Supplier Name</label>
+        <input type="text" id="editSupplierName" required />
+      </div>
+      <div class="form-group">
+        <label for="editSupplierCity">City</label>
+        <input type="text" id="editSupplierCity" required />
+      </div>
+      <div class="form-group">
+        <label for="editSupplierContact">Primary Contact</label>
+        <input type="text" id="editSupplierContact" required />
+      </div>
+      <button type="submit" class="btn-submit">Save Changes</button>
+    </form>
+  </div>
+</div>
