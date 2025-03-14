@@ -61,3 +61,18 @@ exports.deleteSupplyDetails = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.getAllSupplyDetailsBySupplyId = async (req, res) => {
+    try {
+        const supplyDetails = await SupplyDetails.findAll({
+            where: { supply_id: req.params.supplyId }
+        });
+        if (supplyDetails.length > 0) {
+            res.json(supplyDetails);
+        } else {
+            res.status(404).json({ message: 'No supply details found for this supply ID' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

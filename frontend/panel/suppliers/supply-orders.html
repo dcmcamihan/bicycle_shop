@@ -23,9 +23,6 @@
       <div class="filter-dropdown">
         <select id="filterCriteria">
           <option value="all">All</option>
-          <option value="supplier">Supplier</option>
-          <option value="date">Date</option>
-          <option value="payment">Payment Method</option>
         </select>
       </div>
       <!-- Top Add Supply Order Button (optional, you can remove if you want the button only at the bottom) -->
@@ -33,13 +30,13 @@
         <i class="fa-solid fa-plus"></i> Add Supply Order
       </button>
     </div>
-    
+
     <!-- Collapsible Supply Orders Table -->
     <table class="collapsible-table">
       <thead>
         <tr>
           <th></th> <!-- Arrow column -->
-          <th>Order ID</th>
+          <th>Supply ID</th>
           <th>Date</th>
           <th>Supplier</th>
           <th>Sale Attendant</th>
@@ -49,133 +46,8 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Supply Order 1 -->
-        <tr class="parent-row">
-          <td class="toggle-cell">
-            <i class="fa-solid fa-chevron-right toggle-btn"></i>
-          </td>
-          <td>SO001</td>
-          <td>2025-03-20</td>
-          <td>Acme Supplies</td>
-          <td>John Doe</td>
-          <td>Jane Smith</td>
-          <td>Card</td>
-          <td>$1500</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-supply"></i>
-            <i class="fa-solid fa-trash delete-supply"></i>
-          </td>
-        </tr>
-        <tr class="child-row">
-          <td colspan="9">
-            <div class="child-content">
-              <h3>Order Details</h3>
-              <table class="detail-table">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Quantity Supplied</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Bicycle Frame</td>
-                    <td>10</td>
-                  </tr>
-                  <tr>
-                    <td>Handlebars</td>
-                    <td>10</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-        <!-- Supply Order 2 -->
-        <tr class="parent-row">
-          <td class="toggle-cell">
-            <i class="fa-solid fa-chevron-right toggle-btn"></i>
-          </td>
-          <td>SO002</td>
-          <td>2025-03-21</td>
-          <td>Global Parts</td>
-          <td>Mark Taylor</td>
-          <td>Lisa Ray</td>
-          <td>Cash</td>
-          <td>$800</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-supply"></i>
-            <i class="fa-solid fa-trash delete-supply"></i>
-          </td>
-        </tr>
-        <tr class="child-row">
-          <td colspan="9">
-            <div class="child-content">
-              <h3>Order Details</h3>
-              <table class="detail-table">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Quantity Supplied</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Brake Pads</td>
-                    <td>50</td>
-                  </tr>
-                  <tr>
-                    <td>Cables</td>
-                    <td>100</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
-        <!-- Supply Order 3 -->
-        <tr class="parent-row">
-          <td class="toggle-cell">
-            <i class="fa-solid fa-chevron-right toggle-btn"></i>
-          </td>
-          <td>SO003</td>
-          <td>2025-03-22</td>
-          <td>Parts Direct</td>
-          <td>Emily Clark</td>
-          <td>Robert King</td>
-          <td>Card</td>
-          <td>$1200</td>
-          <td>
-            <i class="fa-solid fa-pen-to-square edit-supply"></i>
-            <i class="fa-solid fa-trash delete-supply"></i>
-          </td>
-        </tr>
-        <tr class="child-row">
-          <td colspan="9">
-            <div class="child-content">
-              <h3>Order Details</h3>
-              <table class="detail-table">
-                <thead>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Quantity Supplied</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Chain</td>
-                    <td>20</td>
-                  </tr>
-                  <tr>
-                    <td>Pedals</td>
-                    <td>20</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </td>
-        </tr>
+      <tbody id="supplyTbody">
+        <!-- Dynamic rows will be rendered by JS -->
       </tbody>
     </table>
     

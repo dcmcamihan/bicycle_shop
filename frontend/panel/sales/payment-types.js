@@ -26,7 +26,7 @@ function initPaymentTypes() {
 
   // Fetch payment types data from the API
   function fetchPaymentTypes() {
-    fetch("http://localhost:3000/api/payment-methods") // Replace with your API endpoint
+    fetch("http://127.0.0.1:3000/api/payment-methods") // Replace with your API endpoint
       .then((response) => response.json())
       .then((data) => {
         paymentTypesData = data.map((payment) => ({
@@ -73,7 +73,7 @@ function initPaymentTypes() {
         };
 
         // Send POST request to create a new payment method
-        fetch("http://localhost:3000/api/payment-methods", {
+        fetch("http://127.0.0.1:3000/api/payment-methods", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newPaymentType),
@@ -97,14 +97,15 @@ function initPaymentTypes() {
         };
 
         // Send PUT request to update the payment method
-        fetch(`http://localhost:3000/api/payment-methods/${paymentTypesData[editPaymentIndex].method}`, {
+        console.log(JSON.stringify(updatedPaymentType));
+        fetch(`http://127.0.0.1:3000/api/payment-methods/${paymentTypesData[editPaymentIndex].method}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedPaymentType),
         })
           .then((response) => response.json())
           .then((data) => {
-            paymentTypesData[editPaymentIndex].method = method;
+            paymentTypesData[editPaymentIndex].payment_method_code = method;
             paymentTypesData[editPaymentIndex].description = description;
             paymentModal.style.display = "none";
             paymentForm.reset();
@@ -186,7 +187,7 @@ function initPaymentTypes() {
       const deleteIcon = row.querySelector(".delete-payment");
       deleteIcon.addEventListener("click", () => {
         if (confirm("Are you sure you want to delete this payment type?")) {
-          fetch(`http://localhost:3000/api/payment-methods/${payment.method}`, {
+          fetch(`http://127.0.0.1:3000/api/payment-methods/${payment.method}`, {
             method: "DELETE",
           })
             .then(() => {

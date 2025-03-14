@@ -11,7 +11,7 @@ exports.getAllPaymentMethods = async (req, res) => {
 
 exports.getPaymentMethodByCode = async (req, res) => {
     try {
-        const paymentMethod = await PaymentMethod.findByPk(req.params.code);
+        const paymentMethod = await PaymentMethod.findByPk(req.params.paymentMethodCode);
         if (paymentMethod) {
             res.json(paymentMethod);
         } else {
@@ -34,7 +34,7 @@ exports.createPaymentMethod = async (req, res) => {
 exports.updatePaymentMethod = async (req, res) => {
     try {
         const [updated] = await PaymentMethod.update(req.body, {
-            where: { payment_method_code: req.params.code }
+            where: { payment_method_code: req.params.paymentMethodCode }
         });
         if (updated) {
             const updatedPaymentMethod = await PaymentMethod.findByPk(req.params.code);
@@ -50,7 +50,7 @@ exports.updatePaymentMethod = async (req, res) => {
 exports.deletePaymentMethod = async (req, res) => {
     try {
         const deleted = await PaymentMethod.destroy({
-            where: { payment_method_code: req.params.code }
+            where: { payment_method_code: req.params.paymentMethodCode }
         });
         if (deleted) {
             res.status(204).json();

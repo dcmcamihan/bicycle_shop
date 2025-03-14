@@ -61,3 +61,19 @@ exports.deleteSalePaymentType = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// New function to get sale payment type by sale_id
+exports.getSalePaymentTypeBySaleId = async (req, res) => {
+    try {
+        const salePaymentType = await SalePaymentType.findOne({
+            where: { sale_id: req.params.sale_id }
+        });
+        if (salePaymentType) {
+            res.json(salePaymentType);
+        } else {
+            res.status(404).json({ message: 'Sale payment type not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

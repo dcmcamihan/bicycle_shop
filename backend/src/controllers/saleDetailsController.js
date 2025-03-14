@@ -22,6 +22,21 @@ exports.getSaleDetailsById = async (req, res) => {
     }
 };
 
+exports.getSaleDetailsBySaleId = async (req, res) => {
+    try {
+        const saleDetails = await SaleDetails.findAll({
+            where: { sale_id: req.params.saleId }
+        });
+        if (saleDetails.length > 0) {
+            res.json(saleDetails);
+        } else {
+            res.status(404).json({ message: 'Sale details not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.createSaleDetails = async (req, res) => {
     try {
         const newSaleDetails = await SaleDetails.create(req.body);

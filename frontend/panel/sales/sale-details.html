@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sale Details | Jolens Bicycle Supply</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&display=swap" rel="stylesheet" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-</head>
-<body>
-  <div class="sale-page-container">
+<div class="sale-page-container">
     <h1>Sale Details</h1>
     
     <!-- Search & Filter Container -->
@@ -38,10 +25,9 @@
           <th>Sale ID</th>
           <th>Date</th>
           <th>Customer</th>
-          <th>Cashier/Manager</th>
+          <th>Cashier</th>
           <th>Total Amount</th>
           <th>Payment Method</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody id="saleTbody">
@@ -51,9 +37,6 @@
     
     <!-- Table Controls: Pagination & Add Sale Button -->
     <div class="table-controls">
-        <button class="btn-add-sale" id="btnAddSale">
-        <i class="fa-solid fa-plus"></i> Add Sale
-        </button>
         <div class="pagination">
         <button id="prevPage" disabled>« Prev</button>
         <span id="pageNumber">1</span>
@@ -61,5 +44,3 @@
         </div>
     </div>
   </div>
-</body>
-</html>
