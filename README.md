@@ -352,6 +352,7 @@ bicycle_shop/
 - `PUT /api/supply-details/:id` - Update a supply detail by ID
 - `DELETE /api/supply-details/:id` - Delete a supply detail by ID
 
+
 ## Wireframe
 ### Landing Page
 ![Landing Page](https://github.com/user-attachments/assets/9f44d99b-cb42-4a10-bbcf-309402c494d6)
@@ -367,7 +368,26 @@ bicycle_shop/
 ![Employee List - Light Mode](https://github.com/user-attachments/assets/31f0c4c9-a08e-4c76-908f-ab34754b9420)
 ![Employee List - Dark Mode](https://github.com/user-attachments/assets/38ba02a9-fcfe-425d-a45f-56be888e0665)
 
+
 ## Working Application
+<img width="1565" alt="Screenshot 2025-03-14 at 10 00 10 AM" src="https://github.com/user-attachments/assets/3c845dcd-a163-43f5-b8ab-9c5fbc3eb0e0" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 00 28 AM" src="https://github.com/user-attachments/assets/63fbe65f-857b-4cfc-95f3-5df79b095fb4" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 00 56 AM" src="https://github.com/user-attachments/assets/74961cab-9d88-4332-8bb5-0fef5b1f5178" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 00 59 AM" src="https://github.com/user-attachments/assets/86bd8572-2e0b-4f64-aea2-651efbda69c6" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 01 05 AM" src="https://github.com/user-attachments/assets/ab641e35-6a21-4bcd-81bb-61236c7fc41a" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 02 55 AM" src="https://github.com/user-attachments/assets/fba1b11a-fd0d-495f-bdee-e6008c9f7ef4" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 41 AM" src="https://github.com/user-attachments/assets/78b5993e-59f3-495b-838a-39ec6a9c760b" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 30 AM" src="https://github.com/user-attachments/assets/523e953a-a16a-47f4-bc7a-624283719846" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 19 AM" src="https://github.com/user-attachments/assets/baf84553-db5f-4435-bff1-6d90ab4e764f" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 13 AM" src="https://github.com/user-attachments/assets/3f48e6b1-b70d-48b7-9e46-bdda1fab49fb" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 08 AM" src="https://github.com/user-attachments/assets/b63abc34-2e39-4159-8529-b02b5f6dbb6f" />
+<img width="1565" alt="Screenshot 2025-03-14 at 10 03 03 AM" src="https://github.com/user-attachments/assets/09bf75d7-ca98-4b17-ac72-6de1b9452119" />
+
+
+
+
+
+
 
 
 
